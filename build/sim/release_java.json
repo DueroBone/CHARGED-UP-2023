@@ -1,0 +1,21 @@
+[
+  {
+    "type": "java",
+    "name": "jar (in project BaseVentura2023)",
+    "extensions": [
+      {
+        "name": "Sim DriverStation",
+        "libName": "/Users/duelmood/Repos/BaseVentura2023/build/jni/release/libhalsim_ds_socket.dylib",
+        "defaultEnabled": true
+      },
+      {
+        "name": "Sim GUI",
+        "libName": "/Users/duelmood/Repos/BaseVentura2023/build/jni/release/libhalsim_gui.dylib",
+        "defaultEnabled": false
+      }
+    ],
+    "environment": {},
+    "libraryDir": "/Users/duelmood/Repos/BaseVentura2023/build/jni/release",
+    "mainClassName": "frc.robot.Main"
+  }
+]

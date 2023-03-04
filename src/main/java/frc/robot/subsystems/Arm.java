@@ -26,8 +26,7 @@ public class Arm {
     preset = postition;
     double desiredHeight = 0;
     double desiredLength = 0;
-    actualHeight = 0; // FIND ACTUAL POSITIONS
-    actualLength = 0;
+    getPositions(); // FIND ACTUAL POSITIONS
 
     if (preset == "starting") {
       desiredHeight = positions.startingHeight;
@@ -115,6 +114,8 @@ public class Arm {
   public static void scoringPosition() {
     preset = "scoring";
   }
+
+  static void getPositions() {}
 }
 
 class positions {

@@ -37,6 +37,9 @@ public final class Constants {
             public static final int armExtenderId = 7;
             public static final int armLifterId = 8;
             public static final int LightPWMId = 0;
+            public static final int clawMotor = 9;
+            public static final int clawPnumaticsIn = 9;
+            public static final int clawPnumaticsOut = 9;
 
             // Main breaker panel
             public static final int wireLeftDrive1 = 0;

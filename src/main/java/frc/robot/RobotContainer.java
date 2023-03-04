@@ -677,6 +677,7 @@ public class RobotContainer {
 
     dynamicXbox.X.whenPressed(() -> Piston.contract(true));
     dynamicXbox.Y.whenPressed(() -> Piston.contract(false));
+    
     /*
     dynamicXbox.X.whenPressed(() -> TestMotor.SetSpeed(1));
     dynamicXbox.Y.whenPressed(() -> TestMotor.SetSpeed(0));

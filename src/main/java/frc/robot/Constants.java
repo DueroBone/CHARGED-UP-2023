@@ -21,12 +21,12 @@ import edu.wpi.first.wpilibj.GenericHID.HIDType;
  */
 public final class Constants {
       public static final class DriveConstants {
-            public static final int leftDrive1Id = 1;
-            public static final int leftDrive2Id = 2;
-            public static final int leftDrive3Id = 2;
-            public static final int rightDrive1Id = 3;
-            public static final int rightDrive2Id = 4;
-            public static final int rightDrive3Id = 4;
+            public static final int rightDrive1Id = 1;
+            public static final int rightDrive2Id = 2;
+            public static final int rightDrive3Id = 3;
+            public static final int leftDrive1Id = 4;
+            public static final int leftDrive2Id = 5;
+            public static final int leftDrive3Id = 6;
       }
 
       /**

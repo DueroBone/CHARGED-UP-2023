@@ -18,6 +18,8 @@ import frc.robot.autonomous.AutoSpinToAngleTarget;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.GoTele;
 import frc.robot.subsystems.VisionLight;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.ControllerTracking;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Piston;
@@ -686,7 +688,22 @@ public class RobotContainer {
 
     // Possible joystick configuration
     // 4/5 = grab and release | trigger = scoring position | 2 = bottom position | 3 = top/driving position
-
+    dynamicJoystick.Four.whenPressed(() -> Claw.openClawMotor(0.5));
+    dynamicJoystick.Five.whenPressed(() -> Claw.closeClawMotor(0.5));
+    
+    dynamicJoystick.Three.whenPressed(() -> Arm.drivingPosition());
+    dynamicJoystick.Three.whileHeld(() -> Arm.moveArmToPreset(1, 1));
+    
+    dynamicJoystick.Two.whenPressed(() -> Arm.bottomPosition());
+    dynamicJoystick.Two.whileHeld(() -> Arm.moveArmToPreset(1, 1));
+    
+    dynamicJoystick.Trigger.whenPressed(() -> Arm.scoringPosition());
+    dynamicJoystick.Trigger.whileHeld(() -> Arm.moveArmToPreset(1, 1));
+    
+    dynamicJoystick.Eight.whenPressed(() -> Arm.startingPosition());
+    dynamicJoystick.Eight.whileHeld(() -> Arm.moveArmToPreset(1, 1));
+    dynamicJoystick.Nine.whenPressed(() -> Arm.startingPosition());
+    dynamicJoystick.Nine.whileHeld(() -> Arm.moveArmToPreset(1, 1));
   }
 
   public Command getAutonomousCommand() {

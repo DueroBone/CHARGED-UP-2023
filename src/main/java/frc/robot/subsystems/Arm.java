@@ -22,8 +22,7 @@ public class Arm {
     extenderMotor.setSmartCurrentLimit(10);
   }
 
-  public static void moveArmToPreset(String postition, double lifterSpeed, double extenderSpeed) {
-    preset = postition;
+  public static void moveArmToPreset(double lifterSpeed, double extenderSpeed) {
     double desiredHeight = 0;
     double desiredLength = 0;
     getPositions(); // FIND ACTUAL POSITIONS
@@ -99,7 +98,7 @@ public class Arm {
     extenderMotor.stopMotor();
   }
 
-  public static void statrtingPosition() {
+  public static void startingPosition() {
     preset = "starting";
   }
 

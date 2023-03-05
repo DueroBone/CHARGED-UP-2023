@@ -7,7 +7,7 @@ import frc.robot.Constants;
 public class VisionLight {
 
 
-    static PWM pwm = new PWM(Constants.DeviceConstants.LightPWMId);
+    static PWM pwm = new PWM(Constants.DeviceConstants.LightPWM);
     public static void toggle() {
     // Set the PWM pulse width in milliseconds
     pwm.setPeriodMultiplier(PeriodMultiplier.k1X);

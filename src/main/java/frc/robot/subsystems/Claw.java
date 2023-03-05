@@ -5,7 +5,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants.DeviceConstants;
 
 public class Claw {
-  static CANSparkMax Motor = new CANSparkMax(DeviceConstants.clawMotor, MotorType.kBrushless);
+  static CANSparkMax Motor = new CANSparkMax(DeviceConstants.clawMotorId, MotorType.kBrushless);
 
   public static void openClawMotor(double speed) {
     Motor.set(speed);

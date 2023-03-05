@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.GenericHID.HIDType;
  * numerical or boolean
  * constants. This class should not be used for any other purpose. All constants
  * should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
+ * globally (i.e. public static). Do not put anything functional in this class. HAHA
  *
  * <p>
  * It is advised to statically import this class (or one of its inner classes)
@@ -33,20 +33,23 @@ public final class Constants {
        * For all non-driving devices
        */
       public static final class DeviceConstants {
-            public static final int compressorId = 6;
-            public static final int armExtenderId = 7;
-            public static final int armLifterId = 8;
-            public static final int LightPWMId = 0;
-            public static final int clawMotor = 9;
+            public static final int PCMId = 6;
+            public static final int armLifterId = 7;
+            public static final int armExtenderId = 8;
+            public static final int clawMotorId = 9;
+            public static final int LightPWM = 0;
+      }
 
-            // Main breaker panel
-            public static final int wireLeftDrive1 = 0;
-            public static final int wireLeftDrive2 = 1;
-            public static final int wireLeftDrive3 = 2;
-            public static final int wireRightDrive1 = 4;
-            public static final int wireRightDrive2 = 5;
-            public static final int wireRightDrive3 = 6;
-            public static final int wireVisionLight = 8;
+      public static final class WiringConstants {
+            public static final int RightDrive1 = 0;
+            public static final int RightDrive2 = 1;
+            public static final int RightDrive3 = 2;
+            public static final int LeftDrive1 = 15;
+            public static final int LeftDrive2 = 14;
+            public static final int LeftDrive3 = 13;
+            public static final int armExtender = 8; 
+            public static final int armLifter = 0; //
+            public static final int VisionLight = 0; //
       }
 
       public static final class OIConstants {

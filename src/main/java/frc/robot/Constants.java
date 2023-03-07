@@ -27,6 +27,8 @@ public final class Constants {
             public static final int leftDrive1Id = 4;
             public static final int leftDrive2Id = 5;
             public static final int leftDrive3Id = 6;
+            public static final int GearChangeUp = 0;
+            public static final int GearChangeDown = 1;
       }
 
       /**

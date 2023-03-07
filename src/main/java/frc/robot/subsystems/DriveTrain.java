@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 import static frc.robot.Constants.DriveConstants;
 
@@ -39,9 +41,7 @@ public class DriveTrain extends SubsystemBase {
   // Pneumatic solenoids for Hammer
   // private Solenoid solenoidHammerRaise; // The solenoids we use have two
   // channels, one for each output
-  private Solenoid solenoidGearChange;
   // private Solenoid solenoidHammerDown;
-  private Solenoid solenoidGearDef;
   private boolean highGear = false;
 
   // navX Gyro on RoboRIO 2.0
@@ -51,6 +51,8 @@ public class DriveTrain extends SubsystemBase {
   private static final boolean kSkipGyro = false;
   private static int counter = 0; // for limiting display
 
+  static DoubleSolenoid gearChanger;
+
   /*
    * Creates a new DriveTrain.
    */
@@ -58,26 +60,27 @@ public class DriveTrain extends SubsystemBase {
 
     motorDriveLeft1.restoreFactoryDefaults(); // Clear any non default configuration/settings
     motorDriveLeft2.restoreFactoryDefaults();
+    motorDriveLeft3.restoreFactoryDefaults();
     motorDriveRight1.restoreFactoryDefaults();
     motorDriveRight2.restoreFactoryDefaults();
+    motorDriveRight3.restoreFactoryDefaults();
 
     // SupplyCurrentLimitConfiguration supplyLimit = new
     // SupplyCurrentLimitConfiguration(true, 30, 35, 1.0);
     int ampsMax = 20;
     motorDriveLeft1.setSmartCurrentLimit(ampsMax); // Set the current limist
     motorDriveLeft2.setSmartCurrentLimit(ampsMax);
+    motorDriveLeft3.setSmartCurrentLimit(ampsMax);
     motorDriveRight1.setSmartCurrentLimit(ampsMax);
     motorDriveRight2.setSmartCurrentLimit(ampsMax);
+    motorDriveRight3.setSmartCurrentLimit(ampsMax);
 
     motorDriveLeft1.setClosedLoopRampRate(5);
     motorDriveLeft2.setClosedLoopRampRate(5);
+    motorDriveLeft3.setClosedLoopRampRate(5);
     motorDriveRight1.setClosedLoopRampRate(5);
     motorDriveRight2.setClosedLoopRampRate(5);
-
-    motorDriveLeft1.setClosedLoopRampRate(5);
-    motorDriveLeft2.setClosedLoopRampRate(5);
-    motorDriveRight1.setClosedLoopRampRate(5);
-    motorDriveRight2.setClosedLoopRampRate(5);
+    motorDriveRight3.setClosedLoopRampRate(5);
 
     // DifferentialDrive inverts right side by default, so no need to setInvert()
 
@@ -86,16 +89,15 @@ public class DriveTrain extends SubsystemBase {
 
     motorDriveLeft1.setIdleMode(IdleMode.kCoast); // set brake mode
     motorDriveLeft2.setIdleMode(IdleMode.kCoast);
+    motorDriveLeft3.setIdleMode(IdleMode.kCoast);
     motorDriveRight1.setIdleMode(IdleMode.kCoast);
     motorDriveRight2.setIdleMode(IdleMode.kCoast);
+    motorDriveRight3.setIdleMode(IdleMode.kCoast);
 
     // driveStraightControl.setTolerance(0.02); // set tolerance around setpoint
 
     // Initialize the solenoids
-    // solenoidHammerRaise = new Solenoid(0);
-    solenoidGearChange = new Solenoid(PneumaticsModuleType.REVPH, 0);
-    // solenoidHammerDown = new Solenoid(1);
-    solenoidGearDef = new Solenoid(PneumaticsModuleType.REVPH, 1);
+    gearChanger = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.DriveConstants.GearChangeUp, Constants.DriveConstants.GearChangeDown);
 
     if (kSkipGyro) {
       m_Gyro = null;
@@ -242,18 +244,16 @@ public class DriveTrain extends SubsystemBase {
   }
 
   // Function to set the solenoids
-  public void doHighGear(final boolean fast) {
+  public void doHighGear(boolean fast) {
 
     highGear = fast;
-    // Make sure the solenoids are set to opposite values!
-    // solenoidHammerRaise.set(!hammerExtended); // The solenoid controls output
-    // that pulls piston in, so set it to ! hammerExtended
-    solenoidGearChange.set(!highGear);
-    System.out.println("Gear shifter set to Low Torque Mode");
-    // solenoidHammerDown.set(hammerExtended); // The solenoid controls output that
-    // pushes piston out, so set it to hammerExtended
-    solenoidGearDef.set(highGear);
-    System.out.println("Gear shifter set to High Torque Mode");
+    if (fast) {
+      gearChanger.set(DoubleSolenoid.Value.kForward);
+      System.out.println("Gear shifter set to Low Torque Mode");
+    } else {
+      gearChanger.set(DoubleSolenoid.Value.kReverse);
+      System.out.println("Gear shifter set to High Torque Mode");
+    }
   }
 
   // public double clampValue(double value, double min, double max) {

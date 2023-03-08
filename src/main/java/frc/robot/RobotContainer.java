@@ -681,11 +681,6 @@ public class RobotContainer {
     dynamicXbox.POVUp.whenPressed(() -> Arm.stopLifter());
     dynamicXbox.POVRight.whenPressed(() -> Arm.setLifter(-0.1));
     
-    /*
-    dynamicXbox.X.whenPressed(() -> TestMotor.SetSpeed(1));
-    dynamicXbox.Y.whenPressed(() -> TestMotor.SetSpeed(0));
-    dynamicXbox.B.whenPressed(() -> TestMotor.SetSpeed(-1));
-    */
 
     // Possible joystick configuration
     // 4/5 = grab and release | trigger = scoring position | 2 = bottom position | 3 = top/driving position

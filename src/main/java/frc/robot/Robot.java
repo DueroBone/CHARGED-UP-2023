@@ -37,6 +37,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
+    m_robotContainer = new RobotContainer();
+
     if (!Robot.isSimulation()) {
       UsbCamera visionCamera = CameraServer.startAutomaticCapture();
       visionCamera.setResolution(CamWidth, CamHeight);
@@ -44,10 +46,11 @@ public class Robot extends TimedRobot {
     }
     DriverStation.silenceJoystickConnectionWarning(true);
 
-    m_robotContainer = new RobotContainer();
     // Instantiate the REV Color Sensor V2 object
     colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
     Arm.setup();
+    RobotContainer.RemapControllers();
+    RobotContainer.configureButtonBindings();
   }
 
   /*

@@ -1,6 +1,9 @@
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.ColorSensorV3;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
@@ -9,7 +12,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.RunInTeleop;
+import edu.wpi.first.wpilibj2.command.button.Button;
+import frc.robot.RobotContainer.*;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.I2C;
 
 public class Robot extends TimedRobot {
@@ -19,6 +24,8 @@ public class Robot extends TimedRobot {
   public static int CamWidth = 640;
   public static int CamHeight = 480;
   private ColorSensorV3 colorSensor;
+  int counter1;
+  boolean isBraked = true;
 
   /*
    * This function is run when the robot is first started up and should be used
@@ -40,6 +47,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     // Instantiate the REV Color Sensor V2 object
     colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+    Arm.setup();
   }
 
   /*
@@ -68,8 +76,7 @@ public class Robot extends TimedRobot {
   // This function is called once each time the robot is Disabled
   @Override
   public void disabledInit() {
-    // Hammer.hammer.set(DoubleSolenoid.Value.kReverse);
-     System.out.println("Disabled");
+    System.out.println("Disabled");
   }
 
   @Override
@@ -106,12 +113,13 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    counter1 = 0;
     CommandScheduler.getInstance().clearButtons();
-    if (!CommandScheduler.getInstance().isScheduled(new RunInTeleop())) {
-      System.out.println("Calling RunInTeleOp");
-      CommandScheduler.getInstance().schedule(new RunInTeleop());
-    }
+    RobotContainer.RemapControllers();
+    RobotContainer.configureButtonBindings();
 
+    CommandScheduler.getInstance().clearButtons();
+    RobotContainer.RemapControllers();
     RobotContainer.configureButtonBindings();
   }
 
@@ -119,6 +127,39 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     SmartDashboard.putNumber("IR", colorSensor.getIR());
+
+    BooleanSupplier LT = () -> (dynamicXbox.object.getLeftTriggerAxis() > 0.5);
+    BooleanSupplier RT = () -> (dynamicXbox.object.getRightTriggerAxis() > 0.5);
+    dynamicXbox.LeftTrigger = new Button(LT);
+    dynamicXbox.RightTrigger = new Button(RT);
+    counter1++;
+    if (counter1 % 3 == 0) {
+      double trigger = dynamicXbox.object.getRightTriggerAxis();
+      if ((trigger < 0.5) != isBraked) {
+        System.out.println("Switched DriveTrain brake mode to " + isBraked);
+        if (trigger < 0.5) {
+          DriveTrain.motorDriveLeft1.setIdleMode(IdleMode.kCoast);
+          DriveTrain.motorDriveLeft2.setIdleMode(IdleMode.kCoast);
+          DriveTrain.motorDriveLeft3.setIdleMode(IdleMode.kCoast);
+          DriveTrain.motorDriveRight1.setIdleMode(IdleMode.kCoast);
+          DriveTrain.motorDriveRight2.setIdleMode(IdleMode.kCoast);
+          DriveTrain.motorDriveRight3.setIdleMode(IdleMode.kCoast);
+        } else {
+          DriveTrain.motorDriveLeft1.setIdleMode(IdleMode.kBrake);
+          DriveTrain.motorDriveLeft2.setIdleMode(IdleMode.kBrake);
+          DriveTrain.motorDriveLeft3.setIdleMode(IdleMode.kBrake);
+          DriveTrain.motorDriveRight1.setIdleMode(IdleMode.kBrake);
+          DriveTrain.motorDriveRight2.setIdleMode(IdleMode.kBrake);
+          DriveTrain.motorDriveRight3.setIdleMode(IdleMode.kBrake);
+        }
+      }
+
+      if (trigger < 0.5) {
+        isBraked = true;
+      } else {
+        isBraked = false;
+      }
+    }
   }
 
   @Override

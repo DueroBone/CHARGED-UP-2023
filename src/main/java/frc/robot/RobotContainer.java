@@ -14,17 +14,13 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.autonomous.AutoSpinToAngleTarget;
-import frc.robot.commands.AutoBalance;
 import frc.robot.commands.GoTele;
-import frc.robot.subsystems.VisionLight;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.ControllerTracking;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Piston;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
@@ -677,9 +673,9 @@ public class RobotContainer {
     dynamicPlaystation.RightTrigger.whenPressed(() -> VisionLight.toggle());
     //dynamicXbox.B.whileHeld(() -> System.out.println(DriveTrain.m_Gyro.getPitch()));
     */
-    dynamicXbox.X.whenPressed(() -> Arm.setExtender(0.1));
-    dynamicXbox.Y.whenPressed(() -> Arm.stopExtender());
-    dynamicXbox.B.whenPressed(() -> Arm.setExtender(-0.1));
+    dynamicXbox.X.whileHeld(() -> Arm.setExtender(0.5));
+    dynamicXbox.Y.whileHeld(() -> Arm.stopExtender());
+    dynamicXbox.B.whileHeld(() -> Arm.setExtender(-0.5));
 
     dynamicXbox.POVLeft.whenPressed(() -> Arm.setLifter(0.1));
     dynamicXbox.POVUp.whenPressed(() -> Arm.stopLifter());

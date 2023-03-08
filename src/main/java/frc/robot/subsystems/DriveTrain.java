@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -38,11 +37,6 @@ public class DriveTrain extends SubsystemBase {
   private static final MotorControllerGroup driveGroupRight = new MotorControllerGroup(motorDriveRight1, motorDriveRight2, motorDriveRight3);
   private static final DifferentialDrive differentialDrive = new DifferentialDrive(driveGroupLeft, driveGroupRight);
 
-  // Pneumatic solenoids for Hammer
-  // private Solenoid solenoidHammerRaise; // The solenoids we use have two
-  // channels, one for each output
-  // private Solenoid solenoidHammerDown;
-  private boolean highGear = false;
 
   // navX Gyro on RoboRIO 2.0
   public static AHRS m_Gyro;
@@ -246,8 +240,6 @@ public class DriveTrain extends SubsystemBase {
 
   // Function to set the solenoids
   public void doHighGear(boolean fast) {
-
-    highGear = fast;
     if (fast) {
       gearChanger.set(DoubleSolenoid.Value.kForward);
       System.out.println("Gear shifter set to Low Torque Mode");
@@ -265,5 +257,4 @@ public class DriveTrain extends SubsystemBase {
     System.out.println("in drivetrain stop");
     doTankDrive(0.0, 0.0);
   }
-
 }

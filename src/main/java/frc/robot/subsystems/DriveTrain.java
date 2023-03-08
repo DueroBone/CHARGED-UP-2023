@@ -80,7 +80,7 @@ public class DriveTrain extends SubsystemBase {
     // DifferentialDrive inverts right side by default, so no need to setInvert()
 
     // Invert 1 side of robot so will drive forward    
-    driveGroupRight.setInverted(true);
+    driveGroupLeft.setInverted(true);
 
     motorDriveLeft1.setIdleMode(IdleMode.kCoast); // set brake mode
     motorDriveLeft2.setIdleMode(IdleMode.kCoast);

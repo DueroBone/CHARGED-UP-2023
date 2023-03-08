@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -28,6 +31,21 @@ public class RobotContainer {
   
   Compressor c = new Compressor(5, PneumaticsModuleType.REVPH);
   public static final Piston m_piston = new Piston();
+  /*private static Command autoDriveStraightGyroCommand;
+  private static Command autoDriveStraightCommand;
+  private static Command autoDriveUnitsCommand;
+  private static Command autoDriveSpinCommand;
+  private static Command autoDriveTurnCommand; */
+  private static Command autoStartPos1Command;
+  private static Command autoStartPos2Command;
+  private static Command autoStartPos3Command;
+  private static Command autoStartPos4Command;
+  public static boolean inCompetition = false;
+  public static String allianceColor;
+  public static int startPosition;
+
+  // ** set up autonomous chooser
+  SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
   public static class PortBoundControllers {
     public static class PortZero {
@@ -653,7 +671,29 @@ public class RobotContainer {
   }
 
   public RobotContainer() {
-    m_driveTrain.setDefaultCommand(new GoTele(false, 0.1, 1));
+    m_driveTrain.setDefaultCommand(new GoTele(true, true, 0.1, 1, 0.5));
+    /*autoStartPos1Command = new AutoStartPos1(m_driveTrain, m_shooter, m_intake, m_delivery);
+    autoStartPos2Command = new AutoStartPos2(m_driveTrain, m_shooter, m_intake, m_delivery);
+    autoStartPos3Command = new AutoStartPos3(m_driveTrain, m_shooter, m_intake, m_delivery);
+    autoStartPos4Command = new AutoStartPos4(m_driveTrain, m_shooter, m_intake, m_delivery);
+    autoChooser.setDefaultOption("Auto Start Postion 1", autoStartPos1Command );
+    autoChooser.addOption("Auto Start Postion 2", autoStartPos2Command );
+    autoChooser.addOption("Auto Start Postion 3", autoStartPos3Command );
+    autoChooser.addOption("Auto Start Postion 4", autoStartPos4Command );
+    SmartDashboard.putData("Auto Choices", autoChooser); */;
+
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+        allianceColor = "blue";
+    } else {
+        allianceColor = "red";
+    }
+    startPosition = DriverStation.getLocation();
+    if (DriverStation.isFMSAttached()) {
+        inCompetition = true;
+    } else {
+        inCompetition = false;
+    }
+    System.out.println("start Positon: " + startPosition + " alliance: " + allianceColor + " in Competition: " + inCompetition);
   }
 
   public static void configureButtonBindings() {
@@ -673,39 +713,43 @@ public class RobotContainer {
     dynamicPlaystation.RightTrigger.whenPressed(() -> VisionLight.toggle());
     //dynamicXbox.B.whileHeld(() -> System.out.println(DriveTrain.m_Gyro.getPitch()));
     */
-    dynamicXbox.X.whileHeld(() -> Arm.setExtender(0.5));
+    dynamicXbox.X.whileHeld(() -> Arm.setExtender(0.4)); // out
     dynamicXbox.Y.whileHeld(() -> Arm.stopExtender());
-    dynamicXbox.B.whileHeld(() -> Arm.setExtender(-0.5));
+    dynamicXbox.B.whileHeld(() -> Arm.setExtender(-0.25)); // in
 
-    dynamicXbox.POVLeft.whenPressed(() -> Arm.setLifter(0.1));
-    dynamicXbox.POVUp.whenPressed(() -> Arm.stopLifter());
-    dynamicXbox.POVRight.whenPressed(() -> Arm.setLifter(-0.1));
+    dynamicXbox.LeftBumper.whenPressed(() -> Arm.setLifter(-0.1)); // down
+    dynamicXbox.LeftStickPress.whenPressed(() -> Arm.stopLifter());
+    dynamicXbox.RightStickPress.whenPressed(() -> Arm.setLifter(-0.05));
+    dynamicXbox.RightBumper.whenPressed(() -> Arm.setLifter(0.5)); // up
     
 
     // Possible joystick configuration
-    // 4/5 = grab and release | trigger = scoring position | 2 = bottom position | 3 = top/driving position
+    // 4/5 = grab and release | trigger = scoring position | 2 = bottom position | 3 = top/driving position OUTDATED
+
+    // 4/5 = grab and release | trigger = manual control | 2 = bottom | 3 = scoring position | 7/8/10/44 = driving
     
     dynamicJoystick.Four.whenPressed(() -> Claw.openClawMotor(0.5));
     dynamicJoystick.Five.whenPressed(() -> Claw.closeClawMotor(0.5));
     
-    dynamicJoystick.Three.whenPressed(() -> Arm.drivingPosition());
-    dynamicJoystick.Three.whileHeld(() -> Arm.moveArmToPreset(1, 1));
-    
+    dynamicJoystick.Three.whenPressed(() -> Arm.drivingPosition()); 
+    dynamicJoystick.Three.whileHeld(() -> Arm.moveArmToPreset()); 
+
     dynamicJoystick.Two.whenPressed(() -> Arm.bottomPosition());
-    dynamicJoystick.Two.whileHeld(() -> Arm.moveArmToPreset(1, 1));
+    dynamicJoystick.Two.whileHeld(() -> Arm.moveArmToPreset());
     
-    dynamicJoystick.Trigger.whenPressed(() -> Arm.scoringPosition());
-    dynamicJoystick.Trigger.whileHeld(() -> Arm.moveArmToPreset(1, 1));
+    dynamicJoystick.Three.whenPressed(() -> Arm.scoringPosition());
+    dynamicJoystick.Three.whileHeld(() -> Arm.moveArmToPreset());
     
     dynamicJoystick.Eight.whenPressed(() -> Arm.startingPosition());
-    dynamicJoystick.Eight.whileHeld(() -> Arm.moveArmToPreset(1, 1));
+    dynamicJoystick.Eight.whileHeld(() -> Arm.moveArmToPreset());
     dynamicJoystick.Nine.whenPressed(() -> Arm.startingPosition());
-    dynamicJoystick.Nine.whileHeld(() -> Arm.moveArmToPreset(1, 1));
-    
+    dynamicJoystick.Nine.whileHeld(() -> Arm.moveArmToPreset());
+    // arm movement is in GoTele
   }
 
   public Command getAutonomousCommand() {
-    return null;
+    System.out.println("***getting Autonomous command");
+    return autoChooser.getSelected();
   }
 
   public static void RemapControllers() {

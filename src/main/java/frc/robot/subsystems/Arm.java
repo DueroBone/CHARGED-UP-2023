@@ -12,17 +12,22 @@ public class Arm {
   static double actualLength;
   static double toleranceHeight = 5;
   static double toleranceLength = 5;
+  static double armUpMax = DeviceConstants.armUpMax;
+  static double armDownMax = DeviceConstants.armDownMax;
+  static double armInMax = DeviceConstants.armInMax;
+  static double armOutMax = DeviceConstants.armOutMax;
   static CANSparkMax lifterMotor = new CANSparkMax(DeviceConstants.armLifterId, MotorType.kBrushless);
   static CANSparkMax extenderMotor = new CANSparkMax(DeviceConstants.armExtenderId, MotorType.kBrushless);
 
   public static void setup() {
     lifterMotor.setIdleMode(IdleMode.kBrake);
     lifterMotor.setSmartCurrentLimit(10);
+    lifterMotor.setInverted(true);
     extenderMotor.setIdleMode(IdleMode.kBrake);
     extenderMotor.setSmartCurrentLimit(10);
   }
 
-  public static void moveArmToPreset(double lifterSpeed, double extenderSpeed) {
+  public static void moveArmToPreset() {
     double desiredHeight = 0;
     double desiredLength = 0;
     getPositions(); // FIND ACTUAL POSITIONS
@@ -46,13 +51,13 @@ public class Arm {
 
     if (actualHeight < desiredHeight) {
       if (Math.abs(actualHeight - desiredHeight) > toleranceHeight) {
-        setLifter(lifterSpeed);
+        moveLifter(false);
       } else {
         stopLifter();
       }
     } else if (actualHeight > desiredHeight) {
       if (Math.abs(actualHeight - desiredHeight) > toleranceHeight) {
-        setLifter(-lifterSpeed);
+        moveLifter(true);
       } else {
         stopLifter();
       }
@@ -62,13 +67,13 @@ public class Arm {
 
     if (actualLength < desiredLength) {
       if (Math.abs(actualLength - desiredLength) > toleranceLength) {
-        setExtender(extenderSpeed);
+        moveExtender(true);
       } else {
         stopExtender();
       }
     } else if (actualLength > desiredLength) {
       if (Math.abs(actualLength - desiredLength) > toleranceLength) {
-        setExtender(-extenderSpeed);
+        moveExtender(false);
       } else {
         stopExtender();
       }
@@ -77,24 +82,40 @@ public class Arm {
     }
   }
 
+  public static void moveLifter(boolean up) {
+    if (up) {
+      setLifter(armUpMax);
+    } else {
+      setLifter(armDownMax);
+    }
+  }
+
+  public static void moveExtender(boolean out) {
+    if (out) {
+      setExtender(armOutMax);
+    } else {
+      setExtender(armInMax);
+    }
+  }
+
   public static void setLifter(double speed) {
     lifterMotor.set(speed);
-    System.out.println("Lifter set to " + speed);
+    //System.out.println("Lifter set to " + speed);
   }
-  
+
   public static void setExtender(double speed) {
     extenderMotor.set(speed);
-    System.out.println("Extender set to " + speed);
+    //System.out.println("Extender set to " + speed);
   }
 
   public static void stopLifter() {
     lifterMotor.stopMotor();
-    System.out.println("Stopping lifter");
+    //System.out.println("Stopping lifter");
   }
-  
+
   public static void stopExtender() {
     extenderMotor.stopMotor();
-    System.out.println("Stopping lifter");
+    //System.out.println("Stopping lifter");
   }
 
   public static void stopArm() {
@@ -118,7 +139,8 @@ public class Arm {
     preset = "scoring";
   }
 
-  static void getPositions() {}
+  static void getPositions() {
+  }
 }
 
 class positions {

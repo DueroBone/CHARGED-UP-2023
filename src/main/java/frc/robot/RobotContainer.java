@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static final DriveTrain m_driveTrain = new DriveTrain();
-
+  
   Compressor c = new Compressor(5, PneumaticsModuleType.REVPH);
   public static final Piston m_piston = new Piston();
 
@@ -666,7 +666,7 @@ public class RobotContainer {
     dynamicXbox.A.whileHeld(() -> System.out.println(dynamicXbox.object.getPort() + ": dynamic XBOX"));
     dynamicJoystick.Three.whileHeld(() -> System.out.println(dynamicJoystick.object.getPort() + ": dynamic JOYSTICK"));
     dynamicPlaystation.A.whileHeld(() -> System.out.println(dynamicPlaystation.object.getPort() + ": dynamic Playstation"));
-
+    /* // reinstantiate this area
     dynamicXbox.LeftBumper.whenPressed(() -> CommandScheduler.getInstance().schedule(new AutoSpinToAngleTarget(0.5)));
     dynamicPlaystation.LeftBumper.whenPressed(() -> CommandScheduler.getInstance().schedule(new AutoSpinToAngleTarget(0.5)));
 
@@ -675,10 +675,15 @@ public class RobotContainer {
     dynamicJoystick.Trigger.whenPressed(() -> VisionLight.toggle());
     dynamicXbox.RightTrigger.whenPressed(() -> VisionLight.toggle());
     dynamicPlaystation.RightTrigger.whenPressed(() -> VisionLight.toggle());
-    dynamicXbox.B.whileHeld(() -> System.out.println(DriveTrain.m_Gyro.getPitch()));
+    //dynamicXbox.B.whileHeld(() -> System.out.println(DriveTrain.m_Gyro.getPitch()));
+    */
+    dynamicXbox.X.whenPressed(() -> Arm.setExtender(0.1));
+    dynamicXbox.Y.whenPressed(() -> Arm.stopExtender());
+    dynamicXbox.B.whenPressed(() -> Arm.setExtender(-0.1));
 
-    dynamicXbox.X.whenPressed(() -> Piston.contract(true));
-    dynamicXbox.Y.whenPressed(() -> Piston.contract(false));
+    dynamicXbox.POVLeft.whenPressed(() -> Arm.setLifter(0.1));
+    dynamicXbox.POVUp.whenPressed(() -> Arm.stopLifter());
+    dynamicXbox.POVRight.whenPressed(() -> Arm.setLifter(-0.1));
     
     /*
     dynamicXbox.X.whenPressed(() -> TestMotor.SetSpeed(1));
@@ -688,6 +693,7 @@ public class RobotContainer {
 
     // Possible joystick configuration
     // 4/5 = grab and release | trigger = scoring position | 2 = bottom position | 3 = top/driving position
+    
     dynamicJoystick.Four.whenPressed(() -> Claw.openClawMotor(0.5));
     dynamicJoystick.Five.whenPressed(() -> Claw.closeClawMotor(0.5));
     
@@ -704,6 +710,7 @@ public class RobotContainer {
     dynamicJoystick.Eight.whileHeld(() -> Arm.moveArmToPreset(1, 1));
     dynamicJoystick.Nine.whenPressed(() -> Arm.startingPosition());
     dynamicJoystick.Nine.whileHeld(() -> Arm.moveArmToPreset(1, 1));
+    
   }
 
   public Command getAutonomousCommand() {

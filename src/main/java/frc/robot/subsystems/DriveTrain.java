@@ -57,6 +57,7 @@ public class DriveTrain extends SubsystemBase {
    * Creates a new DriveTrain.
    */
   public DriveTrain() {
+    System.out.println("Instatntiating drivetrain");
 
     motorDriveLeft1.restoreFactoryDefaults(); // Clear any non default configuration/settings
     motorDriveLeft2.restoreFactoryDefaults();

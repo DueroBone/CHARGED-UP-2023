@@ -1,12 +1,16 @@
 package frc.robot;
 
+import com.revrobotics.ColorSensorV3;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.RunInTeleop;
+import edu.wpi.first.wpilibj.I2C;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -14,6 +18,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   public static int CamWidth = 640;
   public static int CamHeight = 480;
+  private ColorSensorV3 colorSensor;
 
   /*
    * This function is run when the robot is first started up and should be used
@@ -33,6 +38,8 @@ public class Robot extends TimedRobot {
     DriverStation.silenceJoystickConnectionWarning(true);
 
     m_robotContainer = new RobotContainer();
+    // Instantiate the REV Color Sensor V2 object
+    colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
   }
 
   /*
@@ -111,7 +118,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
+    SmartDashboard.putNumber("IR", colorSensor.getIR());
   }
 
   @Override

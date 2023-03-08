@@ -79,18 +79,22 @@ public class Arm {
 
   public static void setLifter(double speed) {
     lifterMotor.set(speed);
+    System.out.println("Lifter set to " + speed);
   }
-
+  
   public static void setExtender(double speed) {
     extenderMotor.set(speed);
+    System.out.println("Extender set to " + speed);
   }
 
   public static void stopLifter() {
     lifterMotor.stopMotor();
+    System.out.println("Stopping lifter");
   }
-
+  
   public static void stopExtender() {
     extenderMotor.stopMotor();
+    System.out.println("Stopping lifter");
   }
 
   public static void stopArm() {

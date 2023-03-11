@@ -23,10 +23,10 @@ public class resetArm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!Arm.getLifterLimitUp()) {
+    if (!Arm.info.getLifterLimitUp()) {
       Arm.setLifter(Constants.DeviceConstants.armUpMax / 3);
     }
-    if (!Arm.getExtenderLimitIn()) {
+    if (!Arm.info.getExtenderLimitIn()) {
       Arm.setExtender(Constants.DeviceConstants.armInMax / 3);
     }
     if (counter++%5 == 0) {
@@ -37,12 +37,13 @@ public class resetArm extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Arm.info.resetEncoders();
     System.out.println("Arm reset finished");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Arm.getLifterLimitUp() && Arm.getExtenderLimitIn());
+    return (Arm.info.getLifterLimitUp() && Arm.info.getExtenderLimitIn());
   }
 }

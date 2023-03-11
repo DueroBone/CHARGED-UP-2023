@@ -15,15 +15,14 @@ public class AutoBalance extends CommandBase {
   DriveTrain m_driveTrain;
   int balancingStage;
   int counter1;
-  double speed = 0;
+  double speed = 0.1;
   int timeBalanced;
   int timeRequired = 10000;
 
-  public AutoBalance(double speedIn) {
+  public AutoBalance() {
     // Use addRequirements() here to declare subsystem dependencies.
     // m_driveTrain = new DriveTrain();
     // addRequirements(m_driveTrain);
-    this.speed = speedIn;
   }
 
   // Called when the command is initially scheduled.
@@ -65,9 +64,9 @@ public class AutoBalance extends CommandBase {
         while (timeBalanced < timeRequired) {
           while (Math.abs(DriveTrain.m_Gyro.getPitch()) > 3) {
             if (DriveTrain.m_Gyro.getPitch() < 0) { // is even
-              DriveTrain.doTankDrive(speed / 4, speed / 4);
+              DriveTrain.doTankDrive(speed / 2, speed / 2);
             } else {
-              DriveTrain.doTankDrive(-speed / 4, -speed / 4);
+              DriveTrain.doTankDrive(-speed / 2, -speed / 2);
             }
           }
           timeBalanced++;

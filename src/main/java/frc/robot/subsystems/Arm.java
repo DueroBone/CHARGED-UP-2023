@@ -167,40 +167,45 @@ public class Arm {
   public static void moveToStartingReset() {
     System.out.println("**ARM POSITION IS BEING RESET**");
     CommandScheduler.getInstance().schedule(new resetArm());
-    lifterEncoder.setPosition(0);
-    extenderEncoder.setPosition(0);
   }
 
-  public static double getLifterSpeed() {
-    return lifterMotor.get();
-  }
+  public static class info {
+    public static double getLifterSpeed() {
+      return lifterMotor.get();
+    }
 
-  public static double getExtenderSpeed() {
-    return extenderMotor.get();
-  }
+    public static double getExtenderSpeed() {
+      return extenderMotor.get();
+    }
 
-  public static double getLifterVelocity() {
-    return lifterEncoder.getVelocity();
-  }
+    public static double getLifterVelocity() {
+      return lifterEncoder.getVelocity();
+    }
 
-  public static double getExtenderVelocity() {
-    return extenderEncoder.getVelocity();
-  }
+    public static double getExtenderVelocity() {
+      return extenderEncoder.getVelocity();
+    }
 
-  public static boolean getLifterLimitUp() {
-    return lifterLimitUp.isPressed();
-  }
+    public static boolean getLifterLimitUp() {
+      return lifterLimitUp.isPressed();
+    }
 
-  public static boolean getLifterLimitDown() {
-    return lifterLimitDown.isPressed();
-  }
+    public static boolean getLifterLimitDown() {
+      return lifterLimitDown.isPressed();
+    }
 
-  public static boolean getExtenderLimitIn() {
-    return extenderLimitIn.isPressed();
-  }
+    public static boolean getExtenderLimitIn() {
+      return extenderLimitIn.isPressed();
+    }
 
-  public static boolean getExtenderLimitOut() {
-    return extenderLimitOut.isPressed();
+    public static boolean getExtenderLimitOut() {
+      return extenderLimitOut.isPressed();
+    }
+
+    public static void resetEncoders() {
+      lifterEncoder.setPosition(0);
+      extenderEncoder.setPosition(0);
+    }
   }
 
   static void getPositions() {

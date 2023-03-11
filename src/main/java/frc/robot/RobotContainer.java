@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.autonomous.AutoStartPos1;
+import frc.robot.autonomous.AutoStartPos2;
 import frc.robot.commands.GoTele;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -673,15 +675,15 @@ public class RobotContainer {
 
   public RobotContainer() {
     m_driveTrain.setDefaultCommand(new GoTele(RobotState.isTest(), true, 0.1, 1, 0.5));
-    /*autoStartPos1Command = new AutoStartPos1(m_driveTrain, m_shooter, m_intake, m_delivery);
-    autoStartPos2Command = new AutoStartPos2(m_driveTrain, m_shooter, m_intake, m_delivery);
-    autoStartPos3Command = new AutoStartPos3(m_driveTrain, m_shooter, m_intake, m_delivery);
-    autoStartPos4Command = new AutoStartPos4(m_driveTrain, m_shooter, m_intake, m_delivery);
-    autoChooser.setDefaultOption("Auto Start Postion 1", autoStartPos1Command );
+    autoStartPos1Command = new AutoStartPos1(m_driveTrain);
+    autoStartPos2Command = new AutoStartPos2(m_driveTrain);
+    // autoStartPos3Command = new AutoStartPos3(m_driveTrain, m_shooter, m_intake, m_delivery);
+    // autoStartPos4Command = new AutoStartPos4(m_driveTrain, m_shooter, m_intake, m_delivery);
+    autoChooser.setDefaultOption("Auto Start Postion 1 (Balance)", autoStartPos1Command );
     autoChooser.addOption("Auto Start Postion 2", autoStartPos2Command );
-    autoChooser.addOption("Auto Start Postion 3", autoStartPos3Command );
-    autoChooser.addOption("Auto Start Postion 4", autoStartPos4Command );
-    SmartDashboard.putData("Auto Choices", autoChooser); */;
+    // autoChooser.addOption("Auto Start Postion 3", autoStartPos3Command );
+    // autoChooser.addOption("Auto Start Postion 4", autoStartPos4Command );
+    SmartDashboard.putData("Auto Choices", autoChooser);
 
     if (DriverStation.getAlliance() == Alliance.Blue) {
         allianceColor = "blue";
@@ -728,7 +730,7 @@ public class RobotContainer {
     dynamicJoystick.Four.whenPressed(() -> Claw.open(0.5));
     dynamicJoystick.Four.whenPressed(() -> System.out.println("Closing claw"));
     dynamicJoystick.Four.whenPressed(() -> Claw.stop());
-    
+
     dynamicJoystick.Five.whenPressed(() -> Claw.close(-0.5));
     dynamicJoystick.Five.whenPressed(() -> System.out.println("Opening claw"));
     dynamicJoystick.Five.whenPressed(() -> Claw.stop());
@@ -764,11 +766,14 @@ public class RobotContainer {
   }
 
   public static void RemapControllers() {
-    System.out.println("***Started mapping controllers***");
+    System.out.print("***Mapping controllers");
     dynamicXbox.updateController();
+    System.out.print(" *");
     dynamicPlaystation.updateController();
+    System.out.print(" *");
     dynamicJoystick.updateController();
+    System.out.print(" *");
     PortBoundControllers.updateAllControllers();
-    System.out.println("***Finished mapping controllers***");
+    System.out.println(" * Done***");
   }
 }

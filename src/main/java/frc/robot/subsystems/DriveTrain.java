@@ -8,7 +8,6 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -18,13 +17,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
 import static frc.robot.Constants.DriveConstants;
 
 public class DriveTrain extends SubsystemBase {
 
   //// ----- Motor Controllers ----- /////
-  // There are 4 separate motor controllers with 1 pwm channel per controller
+  // There are 6 separate motor controllers with 1 pwm channel per controller
   public static final CANSparkMax motorDriveLeft1 = new CANSparkMax(DriveConstants.leftDrive1Id, MotorType.kBrushless);
   public static final CANSparkMax motorDriveLeft2 = new CANSparkMax(DriveConstants.leftDrive2Id, MotorType.kBrushless);
   public static final CANSparkMax motorDriveLeft3 = new CANSparkMax(DriveConstants.leftDrive3Id, MotorType.kBrushless);
@@ -36,7 +34,6 @@ public class DriveTrain extends SubsystemBase {
   private static final MotorControllerGroup driveGroupLeft = new MotorControllerGroup(motorDriveLeft1, motorDriveLeft2, motorDriveLeft3);
   private static final MotorControllerGroup driveGroupRight = new MotorControllerGroup(motorDriveRight1, motorDriveRight2, motorDriveRight3);
   private static final DifferentialDrive differentialDrive = new DifferentialDrive(driveGroupLeft, driveGroupRight);
-
 
   // navX Gyro on RoboRIO 2.0
   public static AHRS m_Gyro;
@@ -51,7 +48,7 @@ public class DriveTrain extends SubsystemBase {
    * Creates a new DriveTrain.
    */
   public DriveTrain() {
-    System.out.println("Instatntiating drivetrain");
+    System.out.print("Instatntiating drivetrain");
 
     motorDriveLeft1.restoreFactoryDefaults(); // Clear any non default configuration/settings
     motorDriveLeft2.restoreFactoryDefaults();
@@ -62,13 +59,12 @@ public class DriveTrain extends SubsystemBase {
 
     // SupplyCurrentLimitConfiguration supplyLimit = new
     // SupplyCurrentLimitConfiguration(true, 30, 35, 1.0);
-    int ampsMax = 20;
-    motorDriveLeft1.setSmartCurrentLimit(ampsMax); // Set the current limist
-    motorDriveLeft2.setSmartCurrentLimit(ampsMax);
-    motorDriveLeft3.setSmartCurrentLimit(ampsMax);
-    motorDriveRight1.setSmartCurrentLimit(ampsMax);
-    motorDriveRight2.setSmartCurrentLimit(ampsMax);
-    motorDriveRight3.setSmartCurrentLimit(ampsMax);
+    motorDriveLeft1.setSmartCurrentLimit(DriveConstants.driveAmpsMax); // Set the current limist
+    motorDriveLeft2.setSmartCurrentLimit(DriveConstants.driveAmpsMax);
+    motorDriveLeft3.setSmartCurrentLimit(DriveConstants.driveAmpsMax);
+    motorDriveRight1.setSmartCurrentLimit(DriveConstants.driveAmpsMax);
+    motorDriveRight2.setSmartCurrentLimit(DriveConstants.driveAmpsMax);
+    motorDriveRight3.setSmartCurrentLimit(DriveConstants.driveAmpsMax);
 
     motorDriveLeft1.setClosedLoopRampRate(5);
     motorDriveLeft2.setClosedLoopRampRate(5);
@@ -79,7 +75,7 @@ public class DriveTrain extends SubsystemBase {
 
     // DifferentialDrive inverts right side by default, so no need to setInvert()
 
-    // Invert 1 side of robot so will drive forward    
+    // Invert 1 side of robot so will drive forward
     driveGroupLeft.setInverted(true);
 
     motorDriveLeft1.setIdleMode(IdleMode.kCoast); // set brake mode
@@ -92,7 +88,8 @@ public class DriveTrain extends SubsystemBase {
     // driveStraightControl.setTolerance(0.02); // set tolerance around setpoint
 
     // Initialize the solenoids
-    gearChanger = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.DriveConstants.GearChangeUp, Constants.DriveConstants.GearChangeDown);
+    gearChanger = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.DriveConstants.GearChangeUp,
+        Constants.DriveConstants.GearChangeDown);
 
     if (kSkipGyro) {
       m_Gyro = null;
@@ -120,6 +117,7 @@ public class DriveTrain extends SubsystemBase {
       SmartDashboard.putBoolean("gyro connected", m_Gyro.isConnected());
       System.out.println("gyro connected " + m_Gyro.isConnected());
     }
+    System.out.println(" ... Done");
   }
 
   @Override

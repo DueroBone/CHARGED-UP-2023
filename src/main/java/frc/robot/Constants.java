@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.GenericHID.HIDType;
  * constants. This class should not be used for any other purpose. All constants
  * should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
- * HAHA
+ * *HAHA*
  *
  * <p>
  * It is advised to statically import this class (or one of its inner classes)
@@ -30,9 +30,11 @@ public final class Constants {
             public static final int leftDrive3Id = 6;
             public static final int GearChangeUp = 0;
             public static final int GearChangeDown = 1;
+
+            public static final int driveAmpsMax = 20;
             public static final int drivingExponent = 1;
       }
-
+      
       /**
        * For all non-driving devices
        */
@@ -42,7 +44,8 @@ public final class Constants {
             public static final int armExtenderId = 8;
             public static final int clawMotorId = 9;
             public static final int LightPWM = 0;
-
+            
+            public static final int armAmpsMax = 20;
             public static final double armUpMax = 0.5;
             public static final double armDownMax = 0.1;
             public static final double armInMax = 0.25;

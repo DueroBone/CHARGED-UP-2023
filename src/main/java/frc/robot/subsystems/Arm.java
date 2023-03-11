@@ -12,30 +12,29 @@ public class Arm {
   static double actualLength;
   static double toleranceHeight = 5;
   static double toleranceLength = 5;
-  static double armUpMax = DeviceConstants.armUpMax;
-  static double armDownMax = DeviceConstants.armDownMax;
-  static double armInMax = DeviceConstants.armInMax;
-  static double armOutMax = DeviceConstants.armOutMax;
+  static double armUpSpeed = DeviceConstants.armUpMax;
+  static double armDownSpeed = DeviceConstants.armDownMax;
+  static double armInSpeed = DeviceConstants.armInMax;
+  static double armOutSpeed = DeviceConstants.armOutMax;
   static CANSparkMax lifterMotor = new CANSparkMax(DeviceConstants.armLifterId, MotorType.kBrushless);
   static CANSparkMax extenderMotor = new CANSparkMax(DeviceConstants.armExtenderId, MotorType.kBrushless);
 
   public static void setup() {
+    System.out.print("Setting up arm motors");
     lifterMotor.setIdleMode(IdleMode.kBrake);
-    lifterMotor.setSmartCurrentLimit(10);
+    lifterMotor.setSmartCurrentLimit(DeviceConstants.armAmpsMax);
     lifterMotor.setInverted(true);
     extenderMotor.setIdleMode(IdleMode.kBrake);
-    extenderMotor.setSmartCurrentLimit(10);
+    extenderMotor.setSmartCurrentLimit(DeviceConstants.armAmpsMax);
+    System.out.println(" ... Done");
   }
 
   public static void moveArmToPreset() {
-    double desiredHeight = 0;
-    double desiredLength = 0;
+    double desiredHeight;
+    double desiredLength;
     getPositions(); // FIND ACTUAL POSITIONS
 
-    if (preset == "starting") {
-      desiredHeight = positions.startingHeight;
-      desiredLength = positions.startingLength;
-    } else if (preset == "driving") {
+    if (preset == "driving") {
       desiredHeight = positions.drivingHeight;
       desiredLength = positions.drivingLength;
     } else if (preset == "bottom") {
@@ -84,17 +83,17 @@ public class Arm {
 
   public static void moveLifter(boolean up) {
     if (up) {
-      setLifter(armUpMax);
+      setLifter(armUpSpeed);
     } else {
-      setLifter(armDownMax);
+      setLifter(armDownSpeed);
     }
   }
 
   public static void moveExtender(boolean out) {
     if (out) {
-      setExtender(armOutMax);
+      setExtender(armOutSpeed);
     } else {
-      setExtender(armInMax);
+      setExtender(armInSpeed);
     }
   }
 

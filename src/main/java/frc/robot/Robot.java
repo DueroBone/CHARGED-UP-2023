@@ -49,8 +49,10 @@ public class Robot extends TimedRobot {
     // Instantiate the REV Color Sensor V2 object
     colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
     Arm.setup();
+    Claw.setup();
     RobotContainer.RemapControllers();
     RobotContainer.configureButtonBindings();
+    Arm.moveToStartingReset();
   }
 
   /*
@@ -174,11 +176,13 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    teleopInit();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
+    teleopPeriodic();
   }
 
   /** This function is called once when the robot is first started up. */

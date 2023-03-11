@@ -77,6 +77,7 @@ public class DriveTrain extends SubsystemBase {
 
     // Invert 1 side of robot so will drive forward
     driveGroupLeft.setInverted(true);
+    differentialDrive.setSafetyEnabled(false);
 
     motorDriveLeft1.setIdleMode(IdleMode.kCoast); // set brake mode
     motorDriveLeft2.setIdleMode(IdleMode.kCoast);
@@ -84,6 +85,7 @@ public class DriveTrain extends SubsystemBase {
     motorDriveRight1.setIdleMode(IdleMode.kCoast);
     motorDriveRight2.setIdleMode(IdleMode.kCoast);
     motorDriveRight3.setIdleMode(IdleMode.kCoast);
+
 
     // driveStraightControl.setTolerance(0.02); // set tolerance around setpoint
 
@@ -112,10 +114,10 @@ public class DriveTrain extends SubsystemBase {
         } catch (Exception e) {
           System.out.println(e);
         } // sleep in milliseconds
-        System.out.println("**gyro isCalibrating . . .");
+        System.out.print("**gyro isCalibrating . . .");
       }
       SmartDashboard.putBoolean("gyro connected", m_Gyro.isConnected());
-      System.out.println("gyro connected " + m_Gyro.isConnected());
+      System.out.print("gyro connected " + m_Gyro.isConnected());
     }
     System.out.println(" ... Done");
   }

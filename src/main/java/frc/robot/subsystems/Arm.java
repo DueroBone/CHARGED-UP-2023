@@ -5,8 +5,9 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import frc.robot.Constants.DeviceConstants;;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.DeviceConstants;
+import frc.robot.commands.resetArm;
 
 public class Arm {
   static String preset = "starting";
@@ -40,15 +41,16 @@ public class Arm {
     lifterEncoder = lifterMotor.getEncoder();
     extenderEncoder = extenderMotor.getEncoder();
 
-    lifterEncoder.setPositionConversionFactor(0); // need to set
-    extenderEncoder.setPositionConversionFactor(0);
-    lifterEncoder.setVelocityConversionFactor(0);
-    extenderEncoder.setVelocityConversionFactor(0);
+    lifterEncoder.setPositionConversionFactor(0); // degrees // need to set
+    extenderEncoder.setPositionConversionFactor(0); // inches
 
     lifterLimitUp = lifterMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     lifterLimitDown = lifterMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     extenderLimitIn = extenderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     extenderLimitOut = extenderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+
+    lifterMotor.burnFlash();
+    extenderMotor.burnFlash();
 
     System.out.println(" ... Done");
   }
@@ -130,7 +132,7 @@ public class Arm {
   }
 
   public static void stopLifter() {
-    lifterMotor.stopMotor();
+    lifterMotor.set(0.05);
   }
 
   public static void stopExtender() {
@@ -163,14 +165,8 @@ public class Arm {
   }
 
   public static void moveToStartingReset() {
-    while ((!lifterLimitUp.isPressed()) && (!extenderLimitIn.isPressed())) {
-      if (!lifterLimitUp.isPressed()) {
-        lifterMotor.set(armUpSpeed);
-      }
-      if (!extenderLimitIn.isPressed()) {
-        extenderMotor.set(armInSpeed);
-      }
-    }
+    System.out.println("**ARM POSITION IS BEING RESET**");
+    CommandScheduler.getInstance().schedule(new resetArm());
     lifterEncoder.setPosition(0);
     extenderEncoder.setPosition(0);
   }
@@ -178,14 +174,33 @@ public class Arm {
   public static double getLifterSpeed() {
     return lifterMotor.get();
   }
+
   public static double getExtenderSpeed() {
     return extenderMotor.get();
   }
+
   public static double getLifterVelocity() {
     return lifterEncoder.getVelocity();
   }
+
   public static double getExtenderVelocity() {
     return extenderEncoder.getVelocity();
+  }
+
+  public static boolean getLifterLimitUp() {
+    return lifterLimitUp.isPressed();
+  }
+
+  public static boolean getLifterLimitDown() {
+    return lifterLimitDown.isPressed();
+  }
+
+  public static boolean getExtenderLimitIn() {
+    return extenderLimitIn.isPressed();
+  }
+
+  public static boolean getExtenderLimitOut() {
+    return extenderLimitOut.isPressed();
   }
 
   static void getPositions() {

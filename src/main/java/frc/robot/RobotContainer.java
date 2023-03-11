@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -671,7 +672,7 @@ public class RobotContainer {
   }
 
   public RobotContainer() {
-    m_driveTrain.setDefaultCommand(new GoTele(true, true, 0.1, 1, 0.5));
+    m_driveTrain.setDefaultCommand(new GoTele(RobotState.isTest(), true, 0.1, 1, 0.5));
     /*autoStartPos1Command = new AutoStartPos1(m_driveTrain, m_shooter, m_intake, m_delivery);
     autoStartPos2Command = new AutoStartPos2(m_driveTrain, m_shooter, m_intake, m_delivery);
     autoStartPos3Command = new AutoStartPos3(m_driveTrain, m_shooter, m_intake, m_delivery);
@@ -724,8 +725,13 @@ public class RobotContainer {
 
     // 4/5 = grab and release | trigger = scoring position | 2 = bottom | 3 = driving | 7/8/10/44 = manual control
     
-    dynamicJoystick.Four.whenPressed(() -> Claw.openClawMotor(0.5));
-    dynamicJoystick.Five.whenPressed(() -> Claw.closeClawMotor(0.5));
+    dynamicJoystick.Four.whenPressed(() -> Claw.open(0.5));
+    dynamicJoystick.Four.whenPressed(() -> System.out.println("Closing claw"));
+    dynamicJoystick.Four.whenPressed(() -> Claw.stop());
+    
+    dynamicJoystick.Five.whenPressed(() -> Claw.close(-0.5));
+    dynamicJoystick.Five.whenPressed(() -> System.out.println("Opening claw"));
+    dynamicJoystick.Five.whenPressed(() -> Claw.stop());
     
     dynamicJoystick.Trigger.whenPressed(() -> Arm.scoringPosition());
     dynamicJoystick.Trigger.whileHeld(() -> Arm.moveToPreset());

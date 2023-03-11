@@ -3,7 +3,6 @@ package frc.robot.commands;
 import java.text.MessageFormat;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -32,6 +31,7 @@ public class GoTele extends CommandBase {
   private double armOutMax = DeviceConstants.armOutMax;
   private double armDeadzone = -1;
   private int counter = 0;
+  private static boolean armManual = false;
 
   /**
    * Identifies active driving controller and activates drivetrain
@@ -68,30 +68,36 @@ public class GoTele extends CommandBase {
         || Math.abs(dynamicXbox.object.getRightY()) > deadzone;
     boolean usingConDynP = Math.abs(dynamicPlaystation.object.getLeftY()) > deadzone
         || Math.abs(dynamicPlaystation.object.getRightY()) > deadzone;
-    if (dynamicPlaystation.object.isConnected() && usingConDynP) {
-      teleLeft = dynamicPlaystation.object.getLeftY() * -1;
-      teleRight = dynamicPlaystation.object.getRightY() * -1;
 
-      if (dynamicPlaystation.LeftTrigger.get() == true) {
-        teleLeft = (dynamicPlaystation.object.getLeftY() + dynamicPlaystation.object.getRightY()) / (-2);
+    if (dynamicXbox.object.isConnected() && usingConDynX) {
+      teleLeft = dynamicXbox.object.getLeftY() * -1;
+      teleRight = dynamicXbox.object.getRightY() * -1;
+
+      if (dynamicXbox.LeftTrigger.get() == true) {
+        teleLeft = (dynamicXbox.object.getLeftY() +
+            dynamicXbox.object.getRightY()) / (-2);
         teleRight = teleLeft;
       }
     } else {
-      if (dynamicXbox.object.isConnected() && usingConDynX) {
-        teleLeft = dynamicXbox.object.getLeftY() * -1;
-        teleRight = dynamicXbox.object.getRightY() * -1;
+      if (dynamicPlaystation.object.isConnected() && usingConDynP) {
+        teleLeft = dynamicPlaystation.object.getLeftY() * -1;
+        teleRight = dynamicPlaystation.object.getRightY() * -1;
 
-        if (dynamicXbox.LeftTrigger.get() == true) {
-          teleLeft = (dynamicXbox.object.getLeftY() +
-              dynamicXbox.object.getRightY()) / (-2);
+        if (dynamicPlaystation.LeftTrigger.get() == true) {
+          teleLeft = (dynamicPlaystation.object.getLeftY() + dynamicPlaystation.object.getRightY()) / (-2);
           teleRight = teleLeft;
         }
       }
     }
 
     if (dynamicJoystick.object.isConnected()) {
-      armLift = dynamicJoystick.object.getY() * -1;
-      armExtend = dynamicJoystick.object.getX();
+      if (armManual) {
+        armLift = dynamicJoystick.object.getY() * -1;
+        armExtend = dynamicJoystick.object.getX();
+      } else {
+        armLift = 0;
+        armExtend = 0;
+      }
     }
 
     double a = 1 - deadzone;
@@ -165,11 +171,13 @@ public class GoTele extends CommandBase {
       DriveTrain.doTankDrive(teleLeft, teleRight);
     }
     if (armEnabled) {
-      Arm.setLifter(armLift);
-      Arm.setExtender(armExtend);
+      if (armLift != 0) {
+        Arm.setLifter(armLift);
+      }
+      if (armExtend != 0) {
+        Arm.setExtender(armExtend);
+      }
     }
-    SmartDashboard.putNumber("Left Drive Speed", teleLeft);
-    SmartDashboard.putNumber("Right Drive Speed", teleRight);
   }
 
   @Override
@@ -183,5 +191,15 @@ public class GoTele extends CommandBase {
       output = output * -1;
     }
     return output;
+  }
+
+  public static void enableArmManual() {
+    armManual = true;
+    System.out.println("Arm under manual control");
+  }
+  
+  public static void disableArmManual() {
+    armManual = false;
+    System.out.println("Arm NOT under manual control");
   }
 }

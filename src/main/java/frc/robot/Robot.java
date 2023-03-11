@@ -74,6 +74,11 @@ public class Robot extends TimedRobot {
      * block in order for anything in the Command-based framework to work.
      */
     CommandScheduler.getInstance().run();
+
+    SmartDashboard.putNumber("Left Drive Speed", DriveTrain.getLeftSpeed());
+    SmartDashboard.putNumber("Right Drive Speed", DriveTrain.getRightSpeed());
+    SmartDashboard.putNumber("Arm Lifter Speed", Arm.getLifterSpeed());
+    SmartDashboard.putNumber("Arm Extender Speed", Arm.getExtenderSpeed());
   }
 
   // This function is called once each time the robot is Disabled

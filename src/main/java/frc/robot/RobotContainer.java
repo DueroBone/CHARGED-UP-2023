@@ -698,10 +698,6 @@ public class RobotContainer {
 
   public static void configureButtonBindings() {
     System.out.println("Assigning Buttons");
-
-    dynamicXbox.A.whileHeld(() -> System.out.println(dynamicXbox.object.getPort() + ": dynamic XBOX"));
-    dynamicJoystick.Three.whileHeld(() -> System.out.println(dynamicJoystick.object.getPort() + ": dynamic JOYSTICK"));
-    dynamicPlaystation.A.whileHeld(() -> System.out.println(dynamicPlaystation.object.getPort() + ": dynamic Playstation"));
     /* // reinstantiate this area
     dynamicXbox.LeftBumper.whenPressed(() -> CommandScheduler.getInstance().schedule(new AutoSpinToAngleTarget(0.5)));
     dynamicPlaystation.LeftBumper.whenPressed(() -> CommandScheduler.getInstance().schedule(new AutoSpinToAngleTarget(0.5)));
@@ -726,24 +722,33 @@ public class RobotContainer {
     // Possible joystick configuration
     // 4/5 = grab and release | trigger = scoring position | 2 = bottom position | 3 = top/driving position OUTDATED
 
-    // 4/5 = grab and release | trigger = manual control | 2 = bottom | 3 = scoring position | 7/8/10/44 = driving
+    // 4/5 = grab and release | trigger = scoring position | 2 = bottom | 3 = driving | 7/8/10/44 = manual control
     
     dynamicJoystick.Four.whenPressed(() -> Claw.openClawMotor(0.5));
     dynamicJoystick.Five.whenPressed(() -> Claw.closeClawMotor(0.5));
     
+    dynamicJoystick.Trigger.whenPressed(() -> Arm.scoringPosition());
+    dynamicJoystick.Trigger.whileHeld(() -> Arm.moveToPreset());
+
     dynamicJoystick.Three.whenPressed(() -> Arm.drivingPosition()); 
-    dynamicJoystick.Three.whileHeld(() -> Arm.moveArmToPreset()); 
+    dynamicJoystick.Three.whileHeld(() -> Arm.moveToPreset()); 
 
     dynamicJoystick.Two.whenPressed(() -> Arm.bottomPosition());
-    dynamicJoystick.Two.whileHeld(() -> Arm.moveArmToPreset());
-    
-    dynamicJoystick.Three.whenPressed(() -> Arm.scoringPosition());
-    dynamicJoystick.Three.whileHeld(() -> Arm.moveArmToPreset());
+    dynamicJoystick.Two.whileHeld(() -> Arm.moveToPreset());
     
     dynamicJoystick.Eight.whenPressed(() -> Arm.startingPosition());
-    dynamicJoystick.Eight.whileHeld(() -> Arm.moveArmToPreset());
+    dynamicJoystick.Eight.whileHeld(() -> Arm.moveToPreset());
     dynamicJoystick.Nine.whenPressed(() -> Arm.startingPosition());
-    dynamicJoystick.Nine.whileHeld(() -> Arm.moveArmToPreset());
+    dynamicJoystick.Nine.whileHeld(() -> Arm.moveToPreset());
+
+    dynamicJoystick.Six.whenPressed(() -> GoTele.enableArmManual());
+    dynamicJoystick.Six.whenReleased(() -> GoTele.disableArmManual());
+    dynamicJoystick.Seven.whenPressed(() -> GoTele.enableArmManual());
+    dynamicJoystick.Seven.whenReleased(() -> GoTele.disableArmManual());
+    dynamicJoystick.Ten.whenPressed(() -> GoTele.enableArmManual());
+    dynamicJoystick.Ten.whenReleased(() -> GoTele.disableArmManual());
+    dynamicJoystick.Eleven.whenPressed(() -> GoTele.enableArmManual());
+    dynamicJoystick.Eleven.whenReleased(() -> GoTele.disableArmManual());
     // arm movement is in GoTele
   }
 

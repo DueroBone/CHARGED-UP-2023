@@ -3,7 +3,7 @@
     "GLOBAL": {
       "height": "720",
       "maximized": "0",
-      "style": "0",
+      "style": "1",
       "userScale": "2",
       "width": "1280",
       "xpos": "-1562",
@@ -11,6 +11,16 @@
     }
   },
   "Window": {
+    "###/LiveWindow/Ungrouped/Scheduler": {
+      "Collapsed": "0",
+      "Pos": "186,49",
+      "Size": "400,200"
+    },
+    "###/LiveWindow/Ungrouped/navX-Sensor[4]": {
+      "Collapsed": "0",
+      "Pos": "331,64",
+      "Size": "320,380"
+    },
     "###FMS": {
       "Collapsed": "0",
       "Pos": "5,540",
@@ -19,7 +29,12 @@
     "###Joysticks": {
       "Collapsed": "0",
       "Pos": "258,458",
-      "Size": "796,155"
+      "Size": "796,149"
+    },
+    "###Keyboard 0 Settings": {
+      "Collapsed": "0",
+      "Pos": "10,50",
+      "Size": "300,560"
     },
     "###NetworkTables": {
       "Collapsed": "0",

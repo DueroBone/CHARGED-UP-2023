@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -18,21 +20,43 @@ public class Arm {
   static double armOutSpeed = DeviceConstants.armOutMax;
   static CANSparkMax lifterMotor = new CANSparkMax(DeviceConstants.armLifterId, MotorType.kBrushless);
   static CANSparkMax extenderMotor = new CANSparkMax(DeviceConstants.armExtenderId, MotorType.kBrushless);
+  static RelativeEncoder lifterEncoder;
+  static RelativeEncoder extenderEncoder;
+  static SparkMaxLimitSwitch lifterLimitUp;
+  static SparkMaxLimitSwitch lifterLimitDown;
+  static SparkMaxLimitSwitch extenderLimitIn;
+  static SparkMaxLimitSwitch extenderLimitOut;
 
-  public static void setup() {
+  public static void setup() { // unfinished
     System.out.print("Setting up arm motors");
     lifterMotor.setIdleMode(IdleMode.kBrake);
-    lifterMotor.setSmartCurrentLimit(DeviceConstants.armAmpsMax);
-    lifterMotor.setInverted(true);
     extenderMotor.setIdleMode(IdleMode.kBrake);
+
+    lifterMotor.setInverted(true);
+
+    lifterMotor.setSmartCurrentLimit(DeviceConstants.armAmpsMax);
     extenderMotor.setSmartCurrentLimit(DeviceConstants.armAmpsMax);
+
+    lifterEncoder = lifterMotor.getEncoder();
+    extenderEncoder = extenderMotor.getEncoder();
+
+    lifterEncoder.setPositionConversionFactor(0); // need to set
+    extenderEncoder.setPositionConversionFactor(0);
+    lifterEncoder.setVelocityConversionFactor(0);
+    extenderEncoder.setVelocityConversionFactor(0);
+
+    lifterLimitUp = lifterMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    lifterLimitDown = lifterMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    extenderLimitIn = extenderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    extenderLimitOut = extenderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+
     System.out.println(" ... Done");
   }
 
-  public static void moveArmToPreset() {
+  public static void moveToPreset() {
     double desiredHeight;
     double desiredLength;
-    getPositions(); // FIND ACTUAL POSITIONS
+    getPositions();
 
     if (preset == "driving") {
       desiredHeight = positions.drivingHeight;
@@ -99,22 +123,18 @@ public class Arm {
 
   public static void setLifter(double speed) {
     lifterMotor.set(speed);
-    //System.out.println("Lifter set to " + speed);
   }
 
   public static void setExtender(double speed) {
     extenderMotor.set(speed);
-    //System.out.println("Extender set to " + speed);
   }
 
   public static void stopLifter() {
     lifterMotor.stopMotor();
-    //System.out.println("Stopping lifter");
   }
 
   public static void stopExtender() {
     extenderMotor.stopMotor();
-    //System.out.println("Stopping lifter");
   }
 
   public static void stopArm() {
@@ -124,21 +144,53 @@ public class Arm {
 
   public static void startingPosition() {
     preset = "starting";
+    System.out.println("Moving arm to preset: " + preset);
   }
 
   public static void drivingPosition() {
     preset = "driving";
+    System.out.println("Moving arm to preset: " + preset);
   }
 
   public static void bottomPosition() {
     preset = "bottom";
+    System.out.println("Moving arm to preset: " + preset);
   }
 
   public static void scoringPosition() {
     preset = "scoring";
+    System.out.println("Moving arm to preset: " + preset);
+  }
+
+  public static void moveToStartingReset() {
+    while ((!lifterLimitUp.isPressed()) && (!extenderLimitIn.isPressed())) {
+      if (!lifterLimitUp.isPressed()) {
+        lifterMotor.set(armUpSpeed);
+      }
+      if (!extenderLimitIn.isPressed()) {
+        extenderMotor.set(armInSpeed);
+      }
+    }
+    lifterEncoder.setPosition(0);
+    extenderEncoder.setPosition(0);
+  }
+
+  public static double getLifterSpeed() {
+    return lifterMotor.get();
+  }
+  public static double getExtenderSpeed() {
+    return extenderMotor.get();
+  }
+  public static double getLifterVelocity() {
+    return lifterEncoder.getVelocity();
+  }
+  public static double getExtenderVelocity() {
+    return extenderEncoder.getVelocity();
   }
 
   static void getPositions() {
+    actualHeight = lifterEncoder.getPosition();
+    actualLength = extenderEncoder.getPosition();
   }
 }
 

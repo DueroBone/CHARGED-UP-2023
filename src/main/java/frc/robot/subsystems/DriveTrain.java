@@ -255,4 +255,11 @@ public class DriveTrain extends SubsystemBase {
     System.out.println("in drivetrain stop");
     doTankDrive(0.0, 0.0);
   }
+
+  public static double getLeftSpeed() {
+    return driveGroupLeft.get();
+  }
+  public static double getRightSpeed() {
+    return driveGroupRight.get();
+  }
 }

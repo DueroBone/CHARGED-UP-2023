@@ -587,7 +587,7 @@ public class RobotContainer {
 
     public static void updateController() {
       ControllerTracking.updatePortNumbers();
-      System.out.println("Assigning dXbox: " + object.getPort());
+      System.out.print(" Assigning dXbox: " + object.getPort());
       A = new JoystickButton(object, OIConstants.SmartMap(object, "A"));
       B = new JoystickButton(object, OIConstants.SmartMap(object, "B"));
       X = new JoystickButton(object, OIConstants.SmartMap(object, "X"));
@@ -622,7 +622,7 @@ public class RobotContainer {
     }
 
     public static void assignButtons() {
-      System.out.println("Assigning dPlaystations: " + object.getPort());
+      System.out.print(" Assigning dPlaystations: " + object.getPort());
       A = new JoystickButton(object, OIConstants.SmartMap(object, "A"));
       B = new JoystickButton(object, OIConstants.SmartMap(object, "B"));
       X = new JoystickButton(object, OIConstants.SmartMap(object, "X"));
@@ -658,7 +658,7 @@ public class RobotContainer {
     }
 
     public static void assignButtons() {
-      System.out.println("Assigning dJoystick: " + object.getPort());
+      System.out.print(" Assigning dJoystick: " + object.getPort());
       Trigger = new JoystickButton(object, OIConstants.SmartMap(object, "Trigger"));
       Two = new JoystickButton(object, 2);
       Three = new JoystickButton(object, 3);
@@ -766,13 +766,13 @@ public class RobotContainer {
   }
 
   public static void RemapControllers() {
-    System.out.print("***Mapping controllers");
+    System.out.print("***Mapping controllers ");
     dynamicXbox.updateController();
-    System.out.print(" *");
+    System.out.print(" * ");
     dynamicPlaystation.updateController();
-    System.out.print(" *");
+    System.out.print(" * ");
     dynamicJoystick.updateController();
-    System.out.print(" *");
+    System.out.print(" * ");
     PortBoundControllers.updateAllControllers();
     System.out.println(" * Done***");
   }

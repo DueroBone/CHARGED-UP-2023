@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoException;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -39,10 +40,12 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    if (!Robot.isSimulation()) {
+    try {
       UsbCamera visionCamera = CameraServer.startAutomaticCapture();
       visionCamera.setResolution(CamWidth, CamHeight);
       visionCamera.setBrightness(15);
+    } catch (VideoException e) {
+      System.out.println("NO CAMERA DETECTED");
     }
     DriverStation.silenceJoystickConnectionWarning(true);
 
@@ -52,7 +55,7 @@ public class Robot extends TimedRobot {
     Claw.setup();
     RobotContainer.RemapControllers();
     RobotContainer.configureButtonBindings();
-    Arm.moveToStartingReset();
+    //Arm.moveToStartingReset();
   }
 
   /*

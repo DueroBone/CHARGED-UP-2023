@@ -25,10 +25,10 @@ public class GoTele extends CommandBase {
   private double deadzone = -1;
   private final DriveTrain drivetrain;
   private double speedMultiplier = 1;
-  private double armUpMax = DeviceConstants.armUpMax;
-  private double armDownMax = DeviceConstants.armDownMax;
-  private double armInMax = DeviceConstants.armInMax;
-  private double armOutMax = DeviceConstants.armOutMax;
+  private final double armUpMax = DeviceConstants.armUpMax;
+  private final double armDownMax = DeviceConstants.armDownMax;
+  private final double armInMax = DeviceConstants.armInMax;
+  private final double armOutMax = DeviceConstants.armOutMax;
   private double armDeadzone = -1;
   private int counter = 0;
   private static boolean armManual = false;
@@ -147,7 +147,7 @@ public class GoTele extends CommandBase {
       }
       armExtend = armExtend * a;
       armExtend = smartSquare(armExtend, Constants.DriveConstants.drivingExponent);
-      armLift = armExtend * speedMultiplier;
+      armExtend = armExtend * speedMultiplier;
     } else {
       armExtend = 0;
     }
@@ -176,6 +176,8 @@ public class GoTele extends CommandBase {
       }
       if (armExtend != 0) {
         Arm.setExtender(armExtend);
+      } else {
+        //Arm.stopExtender();
       }
     }
   }

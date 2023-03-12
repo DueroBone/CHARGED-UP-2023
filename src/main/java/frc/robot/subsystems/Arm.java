@@ -5,6 +5,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.DeviceConstants;
 import frc.robot.commands.resetArm;
@@ -13,7 +15,7 @@ public class Arm {
   static String preset = "starting";
   static double actualHeight;
   static double actualLength;
-  static double toleranceHeight = 5;
+  static double toleranceHeight = 2;
   static double toleranceLength = 5;
   static double armUpSpeed = DeviceConstants.armUpMax;
   static double armDownSpeed = DeviceConstants.armDownMax;
@@ -41,16 +43,14 @@ public class Arm {
     lifterEncoder = lifterMotor.getEncoder();
     extenderEncoder = extenderMotor.getEncoder();
 
-    lifterEncoder.setPositionConversionFactor(0); // degrees // need to set
-    extenderEncoder.setPositionConversionFactor(0); // inches
-
+    lifterEncoder.setPositionConversionFactor(0.6262); // degrees
+    extenderEncoder.setPositionConversionFactor(0.4323); // inches // not great, but probable motor error
     lifterLimitUp = lifterMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     lifterLimitDown = lifterMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     extenderLimitIn = extenderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     extenderLimitOut = extenderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-
-    lifterMotor.burnFlash();
-    extenderMotor.burnFlash();
+    //lifterMotor.burnFlash();
+    //extenderMotor.burnFlash();
 
     System.out.println(" ... Done");
   }
@@ -73,23 +73,22 @@ public class Arm {
       desiredHeight = positions.startingHeight;
       desiredLength = positions.startingLength;
     }
-
     if (actualHeight < desiredHeight) {
       if (Math.abs(actualHeight - desiredHeight) > toleranceHeight) {
-        moveLifter(false);
+        moveLifter(true);
       } else {
         stopLifter();
       }
     } else if (actualHeight > desiredHeight) {
       if (Math.abs(actualHeight - desiredHeight) > toleranceHeight) {
-        moveLifter(true);
+        moveLifter(false);
       } else {
         stopLifter();
       }
     } else {
       stopLifter();
     }
-
+    
     if (actualLength < desiredLength) {
       if (Math.abs(actualLength - desiredLength) > toleranceLength) {
         moveExtender(true);
@@ -105,6 +104,7 @@ public class Arm {
     } else {
       stopExtender();
     }
+    //System.out.println("Arm at height: " + actualHeight + " Going to: " + desiredHeight + " At speed: " + lifterMotor.get());
   }
 
   public static void moveLifter(boolean up) {
@@ -125,6 +125,7 @@ public class Arm {
 
   public static void setLifter(double speed) {
     lifterMotor.set(speed);
+    //System.out.println("Lifter at: " + lifterMotor.get());
   }
 
   public static void setExtender(double speed) {
@@ -132,16 +133,25 @@ public class Arm {
   }
 
   public static void stopLifter() {
-    lifterMotor.set(0.05);
+    if (info.getLifterVelocity() < -0.001) {
+      if (info.getLifterVelocity() < 0) {
+        lifterMotor.set(0.05);
+      } else {
+        lifterMotor.stopMotor();
+      }
+    }
+    //lifterMotor.set(0.1);
+    //System.out.println("STOPPING LIFTER");
   }
 
   public static void stopExtender() {
+    //extenderMotor.set(0.02);
     extenderMotor.stopMotor();
   }
 
   public static void stopArm() {
-    lifterMotor.stopMotor();
-    extenderMotor.stopMotor();
+    stopLifter();
+    stopExtender();
   }
 
   public static void startingPosition() {
@@ -202,9 +212,17 @@ public class Arm {
       return extenderLimitOut.isPressed();
     }
 
+    public static double getLifterPosition() {
+      return lifterEncoder.getPosition();
+    }
+    public static double getExtenderPosition() {
+      return extenderEncoder.getPosition();
+    }
+
     public static void resetEncoders() {
       lifterEncoder.setPosition(0);
       extenderEncoder.setPosition(0);
+      DriverStation.reportWarning("Encoders reset", false);
     }
   }
 
@@ -215,15 +233,15 @@ public class Arm {
 }
 
 class positions {
-  public static double startingHeight = 0;
-  public static double startingLength = 0;
+  public static final double startingHeight = 0;
+  public static final double startingLength = 0;
 
-  public static double drivingHeight = 0;
-  public static double drivingLength = 0;
+  public static final double drivingHeight = -15;
+  public static final double drivingLength = 0;
 
-  public static double bottomHeight = 0;
-  public static double bottomLength = 0;
+  public static final double bottomHeight = -50;
+  public static final double bottomLength = 0;
 
-  public static double scoringHeight = 0;
-  public static double scoringLength = 0;
+  public static final double scoringHeight = -30;
+  public static final double scoringLength = 250;
 }

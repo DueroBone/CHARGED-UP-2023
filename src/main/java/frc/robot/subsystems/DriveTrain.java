@@ -34,14 +34,15 @@ public class DriveTrain extends SubsystemBase {
   private static final MotorControllerGroup driveGroupLeft = new MotorControllerGroup(motorDriveLeft1, motorDriveLeft2, motorDriveLeft3);
   private static final MotorControllerGroup driveGroupRight = new MotorControllerGroup(motorDriveRight1, motorDriveRight2, motorDriveRight3);
   private static final DifferentialDrive differentialDrive = new DifferentialDrive(driveGroupLeft, driveGroupRight);
-
+  
   // navX Gyro on RoboRIO 2.0
   public static AHRS m_Gyro;
-
+  
   private static final boolean kSquareInputs = true;
   private static final boolean kSkipGyro = false;
   private static int counter = 0; // for limiting display
-
+  
+  @SuppressWarnings({"CANMessageNotFound", "PneumaticHubGetSolenoids"})
   static DoubleSolenoid gearChanger;
 
   /*
@@ -90,8 +91,8 @@ public class DriveTrain extends SubsystemBase {
     // driveStraightControl.setTolerance(0.02); // set tolerance around setpoint
 
     // Initialize the solenoids
-    gearChanger = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.DriveConstants.GearChangeUp,
-        Constants.DriveConstants.GearChangeDown);
+    //gearChanger = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.DriveConstants.GearChangeUp,
+    //    Constants.DriveConstants.GearChangeDown);
 
     if (kSkipGyro) {
       m_Gyro = null;
@@ -150,9 +151,13 @@ public class DriveTrain extends SubsystemBase {
     // motorDriveRight2.set(rightDrivePercent);
     if (Math.abs(leftDrivePercent) > 0.01) {
       driveGroupLeft.set(leftDrivePercent);
+    } else {
+      driveGroupLeft.stopMotor();
     }
     if (Math.abs(rightDrivePercent) > 0.01) {
       driveGroupRight.set(rightDrivePercent);
+    } else {
+      driveGroupRight.stopMotor();
     }
   }
 

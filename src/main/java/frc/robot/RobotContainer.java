@@ -32,8 +32,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static final DriveTrain m_driveTrain = new DriveTrain();
   
-  Compressor c = new Compressor(5, PneumaticsModuleType.REVPH);
-  public static final Piston m_piston = new Piston();
+  //Compressor c = new Compressor(PneumaticsModuleType.REVPH);
   /*private static Command autoDriveStraightGyroCommand;
   private static Command autoDriveStraightCommand;
   private static Command autoDriveUnitsCommand;
@@ -41,8 +40,8 @@ public class RobotContainer {
   private static Command autoDriveTurnCommand; */
   private static Command autoStartPos1Command;
   private static Command autoStartPos2Command;
-  private static Command autoStartPos3Command;
-  private static Command autoStartPos4Command;
+  // private static Command autoStartPos3Command;
+  // private static Command autoStartPos4Command;
   public static boolean inCompetition = false;
   public static String allianceColor;
   public static int startPosition;
@@ -674,7 +673,7 @@ public class RobotContainer {
   }
 
   public RobotContainer() {
-    m_driveTrain.setDefaultCommand(new GoTele(RobotState.isTest(), true, 0.1, 1, 0.5));
+    m_driveTrain.setDefaultCommand(new GoTele(!RobotState.isTest(), true, 0.1, 1, 0.1));
     autoStartPos1Command = new AutoStartPos1(m_driveTrain);
     autoStartPos2Command = new AutoStartPos2(m_driveTrain);
     // autoStartPos3Command = new AutoStartPos3(m_driveTrain, m_shooter, m_intake, m_delivery);
@@ -712,13 +711,16 @@ public class RobotContainer {
     dynamicPlaystation.RightTrigger.whenPressed(() -> VisionLight.toggle());
     //dynamicXbox.B.whileHeld(() -> System.out.println(DriveTrain.m_Gyro.getPitch()));
     */
-    dynamicXbox.X.whileHeld(() -> Arm.setExtender(0.4)); // out
+    dynamicXbox.X.whileHeld(() -> Arm.setExtender(Constants.DeviceConstants.armOutMax)); // out
     dynamicXbox.Y.whileHeld(() -> Arm.stopExtender());
-    dynamicXbox.B.whileHeld(() -> Arm.setExtender(-0.25)); // in
+    dynamicXbox.B.whileHeld(() -> Arm.setExtender(Constants.DeviceConstants.armInMax)); // in
+    dynamicXbox.A.whileHeld(() -> Arm.stopArm());
+    dynamicXbox.RightStickPress.whenPressed(() -> Arm.info.resetEncoders());
+    dynamicXbox.RightTrigger.whenPressed(() -> Arm.info.resetEncoders());
 
-    dynamicXbox.LeftBumper.whenPressed(() -> Arm.setLifter(-0.1)); // down
+    dynamicXbox.LeftBumper.whenPressed(() -> Arm.setLifter(-0.2)); // down
     dynamicXbox.LeftStickPress.whenPressed(() -> Arm.stopLifter());
-    dynamicXbox.RightStickPress.whenPressed(() -> Arm.setLifter(-0.05));
+    //dynamicXbox.RightStickPress.whenPressed(() -> Arm.setLifter(-0.05));
     dynamicXbox.RightBumper.whenPressed(() -> Arm.setLifter(0.5)); // up
     
 
@@ -727,27 +729,33 @@ public class RobotContainer {
 
     // 4/5 = grab and release | trigger = scoring position | 2 = bottom | 3 = driving | 7/8/10/44 = manual control
     
-    dynamicJoystick.Four.whenPressed(() -> Claw.open(0.5));
+    dynamicJoystick.Four.whenPressed(() -> Claw.open(0.1));
     dynamicJoystick.Four.whenPressed(() -> System.out.println("Closing claw"));
-    dynamicJoystick.Four.whenPressed(() -> Claw.stop());
+    dynamicJoystick.Four.whenReleased(() -> Claw.stop());
 
-    dynamicJoystick.Five.whenPressed(() -> Claw.close(-0.5));
+    dynamicJoystick.Five.whenPressed(() -> Claw.close(0.1));
     dynamicJoystick.Five.whenPressed(() -> System.out.println("Opening claw"));
-    dynamicJoystick.Five.whenPressed(() -> Claw.stop());
+    dynamicJoystick.Five.whenReleased(() -> Claw.stop());
     
     dynamicJoystick.Trigger.whenPressed(() -> Arm.scoringPosition());
     dynamicJoystick.Trigger.whileHeld(() -> Arm.moveToPreset());
-
+    dynamicJoystick.Trigger.whenReleased(() -> Arm.stopArm());
+    
     dynamicJoystick.Three.whenPressed(() -> Arm.drivingPosition()); 
     dynamicJoystick.Three.whileHeld(() -> Arm.moveToPreset()); 
-
+    dynamicJoystick.Three.whenReleased(() -> Arm.stopArm());
+    
     dynamicJoystick.Two.whenPressed(() -> Arm.bottomPosition());
     dynamicJoystick.Two.whileHeld(() -> Arm.moveToPreset());
+    dynamicJoystick.Two.whenReleased(() -> Arm.stopArm());
     
     dynamicJoystick.Eight.whenPressed(() -> Arm.startingPosition());
     dynamicJoystick.Eight.whileHeld(() -> Arm.moveToPreset());
+    dynamicJoystick.Eight.whenReleased(() -> Arm.stopArm());
     dynamicJoystick.Nine.whenPressed(() -> Arm.startingPosition());
     dynamicJoystick.Nine.whileHeld(() -> Arm.moveToPreset());
+    dynamicJoystick.Nine.whenReleased(() -> Arm.stopArm());
+    
 
     dynamicJoystick.Six.whenPressed(() -> GoTele.enableArmManual());
     dynamicJoystick.Six.whenReleased(() -> GoTele.disableArmManual());

@@ -9,7 +9,7 @@ public class Claw {
   static CANSparkMax clawMotor = new CANSparkMax(DeviceConstants.clawMotorId, MotorType.kBrushless);
   public static void setup() {
     clawMotor.setIdleMode(IdleMode.kBrake);
-    clawMotor.setSmartCurrentLimit(10);
+    clawMotor.setSmartCurrentLimit(DeviceConstants.clawAmpsMax);
     clawMotor.burnFlash();
   }
 

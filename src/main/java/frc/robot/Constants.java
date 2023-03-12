@@ -45,11 +45,13 @@ public final class Constants {
             public static final int clawMotorId = 9;
             public static final int LightPWM = 0;
             
+            public static final int clawAmpsMax = 20;
             public static final int armAmpsMax = 20;
+
             public static final double armUpMax = 0.5;
-            public static final double armDownMax = 0.1;
-            public static final double armInMax = 0.25;
-            public static final double armOutMax = 0.4;
+            public static final double armDownMax = -0.25;
+            public static final double armInMax = -0.5;
+            public static final double armOutMax = 1;
       }
 
       public static final class WiringConstants {

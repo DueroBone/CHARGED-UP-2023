@@ -20,9 +20,9 @@ public class AutoStartPos2 extends SequentialCommandGroup {
         new InstantCommand(() -> DriveTrain.stop(), m_driveTrain), // make sure stopped
         new moveToScoringPositionCommand(),
         new WaitCommand(0.25),
-        new InstantCommand(() -> Claw.open(0.5)),
+        new InstantCommand(() -> Claw.open()),
         new WaitCommand(0.25),
-        new AutoDriveStraightTime(-1, 1.5), // book it off starting line
+        new AutoDriveStraightTime(-1, 5), // book it off starting line
         new InstantCommand(() -> DriveTrain.stop(), m_driveTrain) // make sure stopped
     );
   }

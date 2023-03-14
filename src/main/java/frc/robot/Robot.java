@@ -84,6 +84,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Right Drive Speed", DriveTrain.getRightSpeed());
     SmartDashboard.putNumber("Arm Lifter Speed", Arm.info.getLifterSpeed());
     SmartDashboard.putNumber("Arm Extender Speed", Arm.info.getExtenderSpeed());
+
   }
 
   // This function is called once each time the robot is Disabled

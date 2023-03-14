@@ -13,12 +13,12 @@ public class Claw {
     clawMotor.burnFlash();
   }
 
-  public static void open(double speed) {
-    clawMotor.set(speed);
+  public static void open() {
+    clawMotor.set(0.1);
   }
 
-  public static void close(double speed) {
-    clawMotor.set(-speed);
+  public static void close() {
+    clawMotor.set(-0.1);
   }
 
   public static void stop() {

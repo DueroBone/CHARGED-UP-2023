@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -16,7 +17,6 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import static frc.robot.Constants.DriveConstants;
 
 public class DriveTrain extends SubsystemBase {
@@ -34,6 +34,9 @@ public class DriveTrain extends SubsystemBase {
   private static final MotorControllerGroup driveGroupLeft = new MotorControllerGroup(motorDriveLeft1, motorDriveLeft2, motorDriveLeft3);
   private static final MotorControllerGroup driveGroupRight = new MotorControllerGroup(motorDriveRight1, motorDriveRight2, motorDriveRight3);
   private static final DifferentialDrive differentialDrive = new DifferentialDrive(driveGroupLeft, driveGroupRight);
+
+  private static RelativeEncoder m_leftEncoder;
+  private static RelativeEncoder m_rightEncoder;
   
   // navX Gyro on RoboRIO 2.0
   public static AHRS m_Gyro;
@@ -58,8 +61,6 @@ public class DriveTrain extends SubsystemBase {
     motorDriveRight2.restoreFactoryDefaults();
     motorDriveRight3.restoreFactoryDefaults();
 
-    // SupplyCurrentLimitConfiguration supplyLimit = new
-    // SupplyCurrentLimitConfiguration(true, 30, 35, 1.0);
     motorDriveLeft1.setSmartCurrentLimit(DriveConstants.driveAmpsMax); // Set the current limist
     motorDriveLeft2.setSmartCurrentLimit(DriveConstants.driveAmpsMax);
     motorDriveLeft3.setSmartCurrentLimit(DriveConstants.driveAmpsMax);
@@ -74,10 +75,10 @@ public class DriveTrain extends SubsystemBase {
     motorDriveRight2.setClosedLoopRampRate(5);
     motorDriveRight3.setClosedLoopRampRate(5);
 
-    // DifferentialDrive inverts right side by default, so no need to setInvert()
 
     // Invert 1 side of robot so will drive forward
     driveGroupLeft.setInverted(true);
+
     differentialDrive.setSafetyEnabled(false);
 
     motorDriveLeft1.setIdleMode(IdleMode.kCoast); // set brake mode
@@ -87,12 +88,11 @@ public class DriveTrain extends SubsystemBase {
     motorDriveRight2.setIdleMode(IdleMode.kCoast);
     motorDriveRight3.setIdleMode(IdleMode.kCoast);
 
-
-    // driveStraightControl.setTolerance(0.02); // set tolerance around setpoint
+    m_leftEncoder =  motorDriveLeft1.getEncoder();
+    m_rightEncoder = motorDriveRight1.getEncoder();
 
     // Initialize the solenoids
-    //gearChanger = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.DriveConstants.GearChangeUp,
-    //    Constants.DriveConstants.GearChangeDown);
+    //gearChanger = new DoubleSolenoid(PneumaticsModuleType.REVPH, DriveConstants.GearChangeUp, DriveConstants.GearChangeDown);
 
     if (kSkipGyro) {
       m_Gyro = null;
@@ -117,7 +117,7 @@ public class DriveTrain extends SubsystemBase {
         } // sleep in milliseconds
         System.out.print("**gyro isCalibrating . . .");
       }
-      SmartDashboard.putBoolean("gyro connected", m_Gyro.isConnected());
+      //SmartDashboard.putBoolean("gyro connected", m_Gyro.isConnected());
       System.out.print("gyro connected " + m_Gyro.isConnected());
     }
     System.out.println(" ... Done");
@@ -139,16 +139,6 @@ public class DriveTrain extends SubsystemBase {
     if (counter++ % 100 == 0) {
       System.out.println("**driveTrain power L/R: " + leftDrivePercent + " | " + rightDrivePercent);
     }
-    // SquareInputs adjust inputs at low speeds so better control - note 1.0 * 1.0
-    // is still 1
-    // differentialDrive.tankDrive(leftDrivePercent, rightDrivePercent,
-    // kSquareInputs); // Send output to drive train
-    // System.out.println("Left: " + leftDrivePercent + " Right: " +
-    // rightDrivePercent);
-    // motorDriveLeft1.set(leftDrivePercent);
-    // motorDriveLeft2.set(leftDrivePercent);
-    // motorDriveRight1.set(rightDrivePercent);
-    // motorDriveRight2.set(rightDrivePercent);
     if (Math.abs(leftDrivePercent) > 0.01) {
       driveGroupLeft.set(leftDrivePercent);
     } else {
@@ -165,8 +155,6 @@ public class DriveTrain extends SubsystemBase {
 
     // if (counter++ % 100 == 0) { System.out.println("**default driveTrain power: "
     // + leftDrivePercent+"-"+rightDrivePercent); }
-    // SquareInputs adjust inputs at low speeds so better control - note 1.0 * 1.0
-    // is still 1
     differentialDrive.tankDrive(leftDrivePercent, rightDrivePercent, kSquareInputs); // send output to drive train
   }
 
@@ -179,8 +167,6 @@ public class DriveTrain extends SubsystemBase {
   public static void doArcadeDrive(double speed, double rotation) {
     // if (counter++ % 100 == 0) { System.out.println("**arcadeDrive power
     // speed/rotation: " + speed+"-"rotation); }
-    // SquareInputs adjust inputs at low speeds so better control - note 1.0 * 1.0
-    // is still 1
     differentialDrive.arcadeDrive(speed, rotation, kSquareInputs);
   }
 
@@ -206,18 +192,18 @@ public class DriveTrain extends SubsystemBase {
 
   // public void resetEncoder() {
   public void resetEncoders() {
-    // m_leftEncoder.reset();
-    // m_rightEncoder.reset();
+    m_leftEncoder.setPosition(0);
+    m_rightEncoder.setPosition(0);
   }
 
-  public int getLeftEncoderCount() {
-    // return m_leftEncoder.get();
-    return 0;
+  public double getLeftEncoderCount() {
+    return m_leftEncoder.getPosition();
+    //return 0;
   }
 
-  public int getRightEncoderCount() {
-    // return m_rightEncoder.get();
-    return 0;
+  public double getRightEncoderCount() {
+    return m_rightEncoder.getPosition();
+    //return 0;
   }
 
   // get current distance since last encoder reset
@@ -254,9 +240,6 @@ public class DriveTrain extends SubsystemBase {
     }
   }
 
-  // public double clampValue(double value, double min, double max) {
-  // return Math.max(min, Math.min(value, max)); // Make sure we are within range
-  // }
 
   public static void stop() {
     System.out.println("in drivetrain stop");

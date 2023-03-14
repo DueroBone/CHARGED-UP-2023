@@ -25,7 +25,6 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.ControllerTracking;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Piston;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RobotContainer {
@@ -678,8 +677,8 @@ public class RobotContainer {
     autoStartPos2Command = new AutoStartPos2(m_driveTrain);
     // autoStartPos3Command = new AutoStartPos3(m_driveTrain, m_shooter, m_intake, m_delivery);
     // autoStartPos4Command = new AutoStartPos4(m_driveTrain, m_shooter, m_intake, m_delivery);
-    autoChooser.setDefaultOption("Auto Start Postion 1 (Balance)", autoStartPos1Command );
-    autoChooser.addOption("Auto Start Postion 2", autoStartPos2Command );
+    autoChooser.setDefaultOption("Postion 1 (Balance)", autoStartPos1Command );
+    autoChooser.addOption("Postion 2 (Gamepiece Dropoff)", autoStartPos2Command );
     // autoChooser.addOption("Auto Start Postion 3", autoStartPos3Command );
     // autoChooser.addOption("Auto Start Postion 4", autoStartPos4Command );
     SmartDashboard.putData("Auto Choices", autoChooser);
@@ -701,15 +700,11 @@ public class RobotContainer {
   public static void configureButtonBindings() {
     System.out.println("Assigning Buttons");
     /* // reinstantiate this area
-    dynamicXbox.LeftBumper.whenPressed(() -> CommandScheduler.getInstance().schedule(new AutoSpinToAngleTarget(0.5)));
-    dynamicPlaystation.LeftBumper.whenPressed(() -> CommandScheduler.getInstance().schedule(new AutoSpinToAngleTarget(0.5)));
-
     dynamicXbox.RightBumper.whenPressed(() -> CommandScheduler.getInstance().schedule(new AutoBalance(0.1)));
 
     dynamicJoystick.Trigger.whenPressed(() -> VisionLight.toggle());
     dynamicXbox.RightTrigger.whenPressed(() -> VisionLight.toggle());
     dynamicPlaystation.RightTrigger.whenPressed(() -> VisionLight.toggle());
-    //dynamicXbox.B.whileHeld(() -> System.out.println(DriveTrain.m_Gyro.getPitch()));
     */
     dynamicXbox.X.whileHeld(() -> Arm.moveExtender(true));
     dynamicXbox.Y.whileHeld(() -> Arm.stopExtender());
@@ -718,22 +713,17 @@ public class RobotContainer {
     dynamicXbox.RightStickPress.whenPressed(() -> Arm.info.resetEncoders());
     dynamicXbox.RightTrigger.whenPressed(() -> Arm.info.resetEncoders());
 
-    dynamicXbox.LeftBumper.whenPressed(() -> Arm.moveLifter(false)); // down
+    dynamicXbox.LeftBumper.whenPressed(() -> Arm.moveLifter(false));
     dynamicXbox.LeftStickPress.whenPressed(() -> Arm.stopLifter());
-    //dynamicXbox.RightStickPress.whenPressed(() -> Arm.setLifter(-0.05));
-    dynamicXbox.RightBumper.whenPressed(() -> Arm.moveLifter(true)); // up
-    
-
-    // Possible joystick configuration
-    // 4/5 = grab and release | trigger = scoring position | 2 = bottom position | 3 = top/driving position OUTDATED
+    dynamicXbox.RightBumper.whenPressed(() -> Arm.moveLifter(true));
 
     // 4/5 = grab and release | trigger = scoring position | 2 = bottom | 3 = driving | 7/8/10/44 = manual control
     
-    dynamicJoystick.Four.whenPressed(() -> Claw.open(0.1));
+    dynamicJoystick.Four.whenPressed(() -> Claw.open());
     dynamicJoystick.Four.whenPressed(() -> System.out.println("Closing claw"));
     dynamicJoystick.Four.whenReleased(() -> Claw.stop());
 
-    dynamicJoystick.Five.whenPressed(() -> Claw.close(0.1));
+    dynamicJoystick.Five.whenPressed(() -> Claw.close());
     dynamicJoystick.Five.whenPressed(() -> System.out.println("Opening claw"));
     dynamicJoystick.Five.whenReleased(() -> Claw.stop());
     
@@ -756,7 +746,6 @@ public class RobotContainer {
     dynamicJoystick.Nine.whileHeld(() -> Arm.moveToPreset());
     dynamicJoystick.Nine.whenReleased(() -> Arm.stopArm());
     
-
     dynamicJoystick.Six.whenPressed(() -> GoTele.enableArmManual());
     dynamicJoystick.Six.whenReleased(() -> GoTele.disableArmManual());
     dynamicJoystick.Seven.whenPressed(() -> GoTele.enableArmManual());

@@ -16,7 +16,7 @@ public class Arm {
   static double actualHeight;
   static double actualLength;
   static double toleranceHeight = 2;
-  static double toleranceLength = 5;
+  static double toleranceLength = 1;
   static double armUpSpeed = DeviceConstants.armUpMax;
   static double armDownSpeed = DeviceConstants.armDownMax;
   static double armInSpeed = DeviceConstants.armInMax;
@@ -46,16 +46,16 @@ public class Arm {
     lifterEncoder.setPositionConversionFactor(0.6262); // degrees
     extenderEncoder.setPositionConversionFactor(0.4323); // inches | not correct
 
-    lifterLimitUp = lifterMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-    lifterLimitDown = lifterMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-    extenderLimitIn = extenderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-    extenderLimitOut = extenderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    lifterLimitUp = lifterMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    lifterLimitDown = lifterMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    extenderLimitIn = extenderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    extenderLimitOut = extenderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     lifterLimitUp.enableLimitSwitch(false);
     lifterLimitDown.enableLimitSwitch(false);
     extenderLimitIn.enableLimitSwitch(false);
     extenderLimitOut.enableLimitSwitch(false);
-    //lifterMotor.burnFlash();
-    //extenderMotor.burnFlash();
+    // lifterMotor.burnFlash();
+    // extenderMotor.burnFlash();
 
     System.out.println(" ... Done");
   }
@@ -93,7 +93,7 @@ public class Arm {
     } else {
       stopLifter();
     }
-    
+
     if (actualLength < desiredLength) {
       if (Math.abs(actualLength - desiredLength) > toleranceLength) {
         moveExtender(true);
@@ -109,7 +109,8 @@ public class Arm {
     } else {
       stopExtender();
     }
-    //System.out.println("Arm at height: " + actualHeight + " Going to: " + desiredHeight + " At speed: " + lifterMotor.get());
+    // System.out.println("Arm at height: " + actualHeight + " Going to: " +
+    // desiredHeight + " At speed: " + lifterMotor.get());
   }
 
   public static void moveLifter(boolean up) {
@@ -121,16 +122,20 @@ public class Arm {
   }
 
   public static void moveExtender(boolean out) {
-    if (out) {
-      setExtender(armOutSpeed);
+    if (lifterEncoder.getPosition() > -40) {
+      if (out) {
+        setExtender(armOutSpeed);
+      } else {
+        setExtender(armInSpeed);
+      }
     } else {
-      setExtender(armInSpeed);
+      DriverStation.reportWarning("ARM TOO LOW TO EXTEND!!", false);
     }
   }
 
   public static void setLifter(double speed) {
     lifterMotor.set(speed);
-    //System.out.println("Lifter at: " + lifterMotor.get());
+    // System.out.println("Lifter at: " + lifterMotor.get());
   }
 
   public static void setExtender(double speed) {
@@ -145,12 +150,12 @@ public class Arm {
         lifterMotor.stopMotor();
       }
     }
-    //lifterMotor.set(0.1);
-    //System.out.println("STOPPING LIFTER");
+    // lifterMotor.set(0.1);
+    // System.out.println("STOPPING LIFTER");
   }
 
   public static void stopExtender() {
-    //extenderMotor.set(0.02);
+    // extenderMotor.set(0.02);
     extenderMotor.stopMotor();
   }
 
@@ -185,6 +190,8 @@ public class Arm {
   }
 
   public static class info {
+    public static boolean isLifterStopped;
+
     public static double getLifterSpeed() {
       return lifterMotor.get();
     }
@@ -220,6 +227,7 @@ public class Arm {
     public static double getLifterPosition() {
       return lifterEncoder.getPosition();
     }
+
     public static double getExtenderPosition() {
       return extenderEncoder.getPosition();
     }
@@ -247,6 +255,6 @@ class positions {
   public static final double bottomHeight = -50;
   public static final double bottomLength = 0;
 
-  public static final double scoringHeight = -30;
+  public static final double scoringHeight = -25;
   public static final double scoringLength = 225;
 }

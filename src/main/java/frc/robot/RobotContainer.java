@@ -711,17 +711,17 @@ public class RobotContainer {
     dynamicPlaystation.RightTrigger.whenPressed(() -> VisionLight.toggle());
     //dynamicXbox.B.whileHeld(() -> System.out.println(DriveTrain.m_Gyro.getPitch()));
     */
-    dynamicXbox.X.whileHeld(() -> Arm.setExtender(Constants.DeviceConstants.armOutMax)); // out
+    dynamicXbox.X.whileHeld(() -> Arm.moveExtender(true));
     dynamicXbox.Y.whileHeld(() -> Arm.stopExtender());
-    dynamicXbox.B.whileHeld(() -> Arm.setExtender(Constants.DeviceConstants.armInMax)); // in
+    dynamicXbox.B.whileHeld(() -> Arm.moveExtender(false));
     dynamicXbox.A.whileHeld(() -> Arm.stopArm());
     dynamicXbox.RightStickPress.whenPressed(() -> Arm.info.resetEncoders());
     dynamicXbox.RightTrigger.whenPressed(() -> Arm.info.resetEncoders());
 
-    dynamicXbox.LeftBumper.whenPressed(() -> Arm.setLifter(-0.2)); // down
+    dynamicXbox.LeftBumper.whenPressed(() -> Arm.moveLifter(false)); // down
     dynamicXbox.LeftStickPress.whenPressed(() -> Arm.stopLifter());
     //dynamicXbox.RightStickPress.whenPressed(() -> Arm.setLifter(-0.05));
-    dynamicXbox.RightBumper.whenPressed(() -> Arm.setLifter(0.5)); // up
+    dynamicXbox.RightBumper.whenPressed(() -> Arm.moveLifter(true)); // up
     
 
     // Possible joystick configuration

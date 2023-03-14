@@ -44,11 +44,16 @@ public class Arm {
     extenderEncoder = extenderMotor.getEncoder();
 
     lifterEncoder.setPositionConversionFactor(0.6262); // degrees
-    extenderEncoder.setPositionConversionFactor(0.4323); // inches // not great, but probable motor error
+    extenderEncoder.setPositionConversionFactor(0.4323); // inches | not correct
+
     lifterLimitUp = lifterMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     lifterLimitDown = lifterMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     extenderLimitIn = extenderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     extenderLimitOut = extenderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    lifterLimitUp.enableLimitSwitch(false);
+    lifterLimitDown.enableLimitSwitch(false);
+    extenderLimitIn.enableLimitSwitch(false);
+    extenderLimitOut.enableLimitSwitch(false);
     //lifterMotor.burnFlash();
     //extenderMotor.burnFlash();
 
@@ -133,9 +138,9 @@ public class Arm {
   }
 
   public static void stopLifter() {
-    if (info.getLifterVelocity() < -0.001) {
+    if (info.getLifterVelocity() < -0.005) {
       if (info.getLifterVelocity() < 0) {
-        lifterMotor.set(0.05);
+        lifterMotor.set(-10 * info.getLifterVelocity());
       } else {
         lifterMotor.stopMotor();
       }
@@ -243,5 +248,5 @@ class positions {
   public static final double bottomLength = 0;
 
   public static final double scoringHeight = -30;
-  public static final double scoringLength = 250;
+  public static final double scoringLength = 225;
 }

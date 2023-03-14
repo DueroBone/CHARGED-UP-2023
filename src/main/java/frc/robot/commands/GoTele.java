@@ -170,14 +170,17 @@ public class GoTele extends CommandBase {
     if (drivingEnabled) {
       DriveTrain.doTankDrive(teleLeft, teleRight);
     }
-    if (armEnabled) {
+    
+    if (armEnabled && armManual) {
       if (armLift != 0) {
         Arm.setLifter(armLift);
+      } else {
+        Arm.stopLifter();
       }
       if (armExtend != 0) {
         Arm.setExtender(armExtend);
       } else {
-        //Arm.stopExtender();
+        Arm.stopExtender();
       }
     }
   }

@@ -17,6 +17,7 @@ public class Arm {
   static double actualLength;
   static double toleranceHeight = 2;
   static double toleranceLength = 1;
+  static double holdLifter;
   static double armUpSpeed = DeviceConstants.armUpMax;
   static double armDownSpeed = DeviceConstants.armDownMax;
   static double armInSpeed = DeviceConstants.armInMax;
@@ -78,20 +79,23 @@ public class Arm {
       desiredHeight = positions.startingHeight;
       desiredLength = positions.startingLength;
     }
+    if (actualHeight == desiredHeight) {
+      holdLifter = info.getLifterPosition();
+    }
     if (actualHeight < desiredHeight) {
       if (Math.abs(actualHeight - desiredHeight) > toleranceHeight) {
         moveLifter(true);
       } else {
-        stopLifter();
+        holdLifter();
       }
     } else if (actualHeight > desiredHeight) {
       if (Math.abs(actualHeight - desiredHeight) > toleranceHeight) {
         moveLifter(false);
       } else {
-        stopLifter();
+        holdLifter();
       }
     } else {
-      stopLifter();
+      holdLifter();
     }
 
     if (actualLength < desiredLength) {
@@ -143,15 +147,24 @@ public class Arm {
   }
 
   public static void stopLifter() {
-    if (info.getLifterVelocity() < -0.005) {
-      if (info.getLifterVelocity() < 0) {
-        lifterMotor.set(-10 * info.getLifterVelocity());
-      } else {
-        lifterMotor.stopMotor();
-      }
-    }
+    holdLifter = info.getLifterPosition();
     // lifterMotor.set(0.1);
-    // System.out.println("STOPPING LIFTER");
+  }
+
+  public static void holdLifter() {
+    System.out.println(info.getLifterPosition() + "  " + holdLifter);
+    if (info.getLifterPosition() - holdLifter < 0) {
+      setLifter((info.getLifterPosition() - holdLifter) * -0.25);
+      /*
+      if (info.getLifterPosition() - holdLifter < -1) {
+        setLifter(0.1);
+      } else {
+        setLifter(0.05);
+      }
+    } else {
+      lifterMotor.stopMotor();
+      */
+    }
   }
 
   public static void stopExtender() {

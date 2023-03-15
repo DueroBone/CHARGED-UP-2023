@@ -709,12 +709,14 @@ public class RobotContainer {
     dynamicXbox.X.whileHeld(() -> Arm.moveExtender(true));
     dynamicXbox.Y.whileHeld(() -> Arm.stopExtender());
     dynamicXbox.B.whileHeld(() -> Arm.moveExtender(false));
-    dynamicXbox.A.whileHeld(() -> Arm.stopArm());
+    //dynamicXbox.A.whileHeld(() -> Arm.stopArm());
+    dynamicXbox.A.whileHeld(() -> Arm.setLifter(0.05));
     dynamicXbox.RightStickPress.whenPressed(() -> Arm.info.resetEncoders());
     dynamicXbox.RightTrigger.whenPressed(() -> Arm.info.resetEncoders());
 
     dynamicXbox.LeftBumper.whenPressed(() -> Arm.moveLifter(false));
     dynamicXbox.LeftStickPress.whenPressed(() -> Arm.stopLifter());
+    dynamicXbox.LeftStickPress.whileHeld(() -> Arm.holdLifter());
     dynamicXbox.RightBumper.whenPressed(() -> Arm.moveLifter(true));
 
     // 4/5 = grab and release | trigger = scoring position | 2 = bottom | 3 = driving | 7/8/10/44 = manual control

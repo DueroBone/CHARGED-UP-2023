@@ -168,6 +168,10 @@ public class Robot extends TimedRobot {
         }
       }
 
+      if (counter1 % 100 == 0) {
+        System.out.println("Lifter: " + Arm.info.getLifterSpeed() + " Extender: " + Arm.info.getExtenderSpeed());
+      }
+
       if (trigger < 0.5) {
         isBraked = true;
       } else {

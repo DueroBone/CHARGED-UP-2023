@@ -48,7 +48,7 @@ public class RobotContainer {
 
   // ** set up autonomous chooser
   SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-  //SendableChooser<Boolean> testChooser = new SendableChooser<Boolean>();
+  SendableChooser<Boolean> testChooser = new SendableChooser<Boolean>();
 
   public static class PortBoundControllers {
     public static class PortZero {
@@ -676,6 +676,10 @@ public class RobotContainer {
   }
 
   public RobotContainer() {
+    testChooser.setDefaultOption("Enabled", true);
+    testChooser.addOption("Disabled", false);
+    SmartDashboard.putData("Driving Enabled", testChooser);
+
     m_driveTrain.setDefaultCommand(new GoTele(true, true, 0.1, 1, 0.1));
     autoStartPos1Command = new AutoStartPos1(m_driveTrain);
     autoStartPos2Command = new AutoStartPos2(m_driveTrain);
@@ -686,10 +690,7 @@ public class RobotContainer {
     // autoChooser.addOption("Auto Start Postion 3", autoStartPos3Command );
     // autoChooser.addOption("Auto Start Postion 4", autoStartPos4Command );
     SmartDashboard.putData("Auto Choices", autoChooser);
-
-    // testChooser.setDefaultOption("Enabled", true);
-    // testChooser.addOption("Disabled", false);
-    // SmartDashboard.putData("Driving Enabled", testChooser);
+    
 
     if (DriverStation.getAlliance() == Alliance.Blue) {
         allianceColor = "blue";

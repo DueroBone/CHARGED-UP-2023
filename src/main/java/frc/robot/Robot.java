@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoException;
+import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,6 +45,9 @@ public class Robot extends TimedRobot {
       UsbCamera visionCamera = CameraServer.startAutomaticCapture();
       visionCamera.setResolution(CamWidth, CamHeight);
       visionCamera.setBrightness(15);
+      visionCamera.setPixelFormat(PixelFormat.kYUYV);
+      visionCamera.setFPS(30);
+      visionCamera.setResolution(CamWidth, CamHeight);
     } catch (VideoException e) {
       System.out.println("NO CAMERA DETECTED");
     }

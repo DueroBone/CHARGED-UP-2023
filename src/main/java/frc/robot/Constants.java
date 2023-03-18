@@ -50,7 +50,7 @@ public final class Constants {
 
             public static final double armUpMax = 0.5;
             public static final double armDownMax = -0.25;
-            public static final double armInMax = -0.5;
+            public static final double armInMax = -0.75;
             public static final double armOutMax = 1;
       }
 

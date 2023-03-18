@@ -32,6 +32,7 @@ public class GoTele extends CommandBase {
   private double armDeadzone = -1;
   private int counter = 0;
   private static boolean armManual = false;
+  static boolean isHoldingArm = false;
 
   /**
    * Identifies active driving controller and activates drivetrain
@@ -66,34 +67,22 @@ public class GoTele extends CommandBase {
 
     boolean usingConDynX = Math.abs(dynamicXbox.object.getLeftY()) > deadzone
         || Math.abs(dynamicXbox.object.getRightY()) > deadzone;
-    boolean usingConDynP = Math.abs(dynamicPlaystation.object.getLeftY()) > deadzone
-        || Math.abs(dynamicPlaystation.object.getRightY()) > deadzone;
 
     if (dynamicXbox.object.isConnected() && usingConDynX) {
       teleLeft = dynamicXbox.object.getLeftY() * -1;
       teleRight = dynamicXbox.object.getRightY() * -1;
 
-      if (dynamicXbox.LeftTrigger.get() == true) {
+      if (dynamicXbox.LeftTrigger.getAsBoolean() == true) {
         teleLeft = (dynamicXbox.object.getLeftY() +
             dynamicXbox.object.getRightY()) / (-2);
         teleRight = teleLeft;
       }
-    } else {
-      if (dynamicPlaystation.object.isConnected() && usingConDynP) {
-        teleLeft = dynamicPlaystation.object.getLeftY() * -1;
-        teleRight = dynamicPlaystation.object.getRightY() * -1;
-
-        if (dynamicPlaystation.LeftTrigger.get() == true) {
-          teleLeft = (dynamicPlaystation.object.getLeftY() + dynamicPlaystation.object.getRightY()) / (-2);
-          teleRight = teleLeft;
-        }
-      }
     }
 
-    if (dynamicJoystick.object.isConnected()) {
+    if (dynamicPlaystation.object.isConnected()) {
       if (armManual) {
-        armLift = dynamicJoystick.object.getY() * -1;
-        armExtend = dynamicJoystick.object.getX();
+        armLift = dynamicPlaystation.object.getRightY() * -1;
+        armExtend = dynamicPlaystation.object.getLeftY() * -1;
       } else {
         armLift = 0;
         armExtend = 0;
@@ -154,16 +143,16 @@ public class GoTele extends CommandBase {
 
     if (armLift != 0) {
       if (armLift > 0) {
-        armLift = armLift * armUpMax;
+        armLift = armLift * 1.5 * armUpMax;
       } else {
-        armLift = armLift * armDownMax;
+        armLift = armLift * -1.5 * armDownMax;
       }
     }
     if (armExtend != 0) {
       if (armExtend > 0) {
         armExtend = armExtend * armOutMax;
       } else {
-        armExtend = armExtend * armInMax;
+        armExtend = armExtend * -armInMax;
       }
     }
 
@@ -174,8 +163,15 @@ public class GoTele extends CommandBase {
     if (armEnabled && armManual) {
       if (armLift != 0) {
         Arm.setLifter(armLift);
+        isHoldingArm = false;
       } else {
-        Arm.stopLifter();
+        if (isHoldingArm) {
+          Arm.holdLifter();
+        } else {
+          Arm.stopLifter();
+          isHoldingArm  = true;
+          System.out.println("getName()");
+        }
       }
       if (armExtend != 0) {
         Arm.setExtender(armExtend);

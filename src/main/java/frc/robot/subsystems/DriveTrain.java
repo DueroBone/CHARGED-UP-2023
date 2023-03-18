@@ -92,7 +92,7 @@ public class DriveTrain extends SubsystemBase {
     m_rightEncoder = motorDriveRight1.getEncoder();
 
     // Initialize the solenoids
-    //gearChanger = new DoubleSolenoid(PneumaticsModuleType.REVPH, DriveConstants.GearChangeUp, DriveConstants.GearChangeDown);
+    gearChanger = new DoubleSolenoid(PneumaticsModuleType.REVPH, DriveConstants.GearChangeUp, DriveConstants.GearChangeDown);
 
     if (kSkipGyro) {
       m_Gyro = null;

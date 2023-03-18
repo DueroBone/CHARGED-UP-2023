@@ -6,8 +6,10 @@ import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DeviceConstants;
 import frc.robot.commands.resetArm;
 
@@ -30,6 +32,7 @@ public class Arm {
   static SparkMaxLimitSwitch lifterLimitDown;
   static SparkMaxLimitSwitch extenderLimitIn;
   static SparkMaxLimitSwitch extenderLimitOut;
+  static PIDController pid;
 
   public static void setup() { // unfinished
     System.out.print("Setting up arm motors");
@@ -51,10 +54,11 @@ public class Arm {
     lifterLimitDown = lifterMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     extenderLimitIn = extenderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     extenderLimitOut = extenderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    lifterLimitUp.enableLimitSwitch(false);
-    lifterLimitDown.enableLimitSwitch(false);
-    extenderLimitIn.enableLimitSwitch(false);
-    extenderLimitOut.enableLimitSwitch(false);
+
+    pid = new PIDController(0.05, 0, 0.5);
+    pid.setTolerance(toleranceHeight);
+    pid.enableContinuousInput(-70, 70);
+
     // lifterMotor.burnFlash();
     // extenderMotor.burnFlash();
 
@@ -126,14 +130,16 @@ public class Arm {
   }
 
   public static void moveExtender(boolean out) {
-    if (lifterEncoder.getPosition() > -40) {
-      if (out) {
-        setExtender(armOutSpeed);
+    if (RobotContainer.safteyEnabled) {
+      if (lifterEncoder.getPosition() < -50) {
+        DriverStation.reportWarning("ARM TOO LOW TO EXTEND!!", false);
       } else {
-        setExtender(armInSpeed);
+        if (out) {
+          setExtender(armOutSpeed);
+        } else {
+          setExtender(armInSpeed);
+        }
       }
-    } else {
-      DriverStation.reportWarning("ARM TOO LOW TO EXTEND!!", false);
     }
   }
 
@@ -148,23 +154,15 @@ public class Arm {
 
   public static void stopLifter() {
     holdLifter = info.getLifterPosition();
+    holdLifter();
+    System.out.println("Stop L");
     // lifterMotor.set(0.1);
   }
 
   public static void holdLifter() {
-    System.out.println(info.getLifterPosition() + "  " + holdLifter);
-    if (info.getLifterPosition() - holdLifter < 0) {
-      setLifter((info.getLifterPosition() - holdLifter) * -0.25);
-      /*
-      if (info.getLifterPosition() - holdLifter < -1) {
-        setLifter(0.1);
-      } else {
-        setLifter(0.05);
-      }
-    } else {
-      lifterMotor.stopMotor();
-      */
-    }
+    System.out.println(info.getLifterPosition() + " " + holdLifter);
+    //setLifter(pid.calculate(info.getLifterPosition(), holdLifter));
+    setLifter(0.05);
   }
 
   public static void stopExtender() {
@@ -175,6 +173,7 @@ public class Arm {
   public static void stopArm() {
     stopLifter();
     stopExtender();
+    System.out.println("Stop arm");
   }
 
   public static void startingPosition() {

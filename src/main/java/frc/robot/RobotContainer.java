@@ -31,7 +31,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static final DriveTrain m_driveTrain = new DriveTrain();
   
-  //Compressor c = new Compressor(PneumaticsModuleType.REVPH);
+  Compressor c = new Compressor(PneumaticsModuleType.REVPH);
   /*private static Command autoDriveStraightGyroCommand;
   private static Command autoDriveStraightCommand;
   private static Command autoDriveUnitsCommand;
@@ -42,11 +42,13 @@ public class RobotContainer {
   // private static Command autoStartPos3Command;
   // private static Command autoStartPos4Command;
   public static boolean inCompetition = false;
+  public static boolean safteyEnabled = true;
   public static String allianceColor;
   public static int startPosition;
 
   // ** set up autonomous chooser
   SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  //SendableChooser<Boolean> testChooser = new SendableChooser<Boolean>();
 
   public static class PortBoundControllers {
     public static class PortZero {
@@ -613,6 +615,7 @@ public class RobotContainer {
     public static JoystickButton Options;
     public static JoystickButton LeftTrigger;
     public static JoystickButton RightTrigger;
+    public static JoystickButton Touchpad;
 
     public static void updateController() {
       ControllerTracking.updatePortNumbers();
@@ -633,6 +636,7 @@ public class RobotContainer {
       Options = new JoystickButton(object, OIConstants.SmartMap(object, "Options"));
       LeftTrigger = new JoystickButton(object, OIConstants.SmartMap(object, "LTrigger"));
       RightTrigger = new JoystickButton(object, OIConstants.SmartMap(object, "RTrigger"));
+      Touchpad = new JoystickButton(object, OIConstants.SmartMap(object, "Touchpad"));
     }
   }
 
@@ -672,7 +676,7 @@ public class RobotContainer {
   }
 
   public RobotContainer() {
-    m_driveTrain.setDefaultCommand(new GoTele(!RobotState.isTest(), true, 0.1, 1, 0.1));
+    m_driveTrain.setDefaultCommand(new GoTele(true, true, 0.1, 1, 0.1));
     autoStartPos1Command = new AutoStartPos1(m_driveTrain);
     autoStartPos2Command = new AutoStartPos2(m_driveTrain);
     // autoStartPos3Command = new AutoStartPos3(m_driveTrain, m_shooter, m_intake, m_delivery);
@@ -682,6 +686,10 @@ public class RobotContainer {
     // autoChooser.addOption("Auto Start Postion 3", autoStartPos3Command );
     // autoChooser.addOption("Auto Start Postion 4", autoStartPos4Command );
     SmartDashboard.putData("Auto Choices", autoChooser);
+
+    // testChooser.setDefaultOption("Enabled", true);
+    // testChooser.addOption("Disabled", false);
+    // SmartDashboard.putData("Driving Enabled", testChooser);
 
     if (DriverStation.getAlliance() == Alliance.Blue) {
         allianceColor = "blue";
@@ -712,12 +720,49 @@ public class RobotContainer {
     //dynamicXbox.A.whileHeld(() -> Arm.stopArm());
     dynamicXbox.A.whileHeld(() -> Arm.setLifter(0.05));
     dynamicXbox.RightStickPress.whenPressed(() -> Arm.info.resetEncoders());
-    dynamicXbox.RightTrigger.whenPressed(() -> Arm.info.resetEncoders());
+    dynamicXbox.RightTrigger.whenPressed(() -> Arm.setLifter(1));
 
     dynamicXbox.LeftBumper.whenPressed(() -> Arm.moveLifter(false));
     dynamicXbox.LeftStickPress.whenPressed(() -> Arm.stopLifter());
     dynamicXbox.LeftStickPress.whileHeld(() -> Arm.holdLifter());
     dynamicXbox.RightBumper.whenPressed(() -> Arm.moveLifter(true));
+
+    // Playstation
+
+    dynamicPlaystation.Y.whenPressed(() -> Arm.drivingPosition());
+    dynamicPlaystation.Y.whileHeld(() -> Arm.moveToPreset());
+    dynamicPlaystation.Y.whenReleased(() -> Arm.stopArm());
+
+    dynamicPlaystation.X.whenPressed(() -> Arm.bottomPosition());
+    dynamicPlaystation.X.whileHeld(() -> Arm.moveToPreset());
+    dynamicPlaystation.X.whenReleased(() -> Arm.stopArm());
+
+    dynamicPlaystation.B.whenPressed(() -> Arm.scoringPosition());
+    dynamicPlaystation.B.whileHeld(() -> Arm.moveToPreset());
+    dynamicPlaystation.B.whenReleased(() -> Arm.stopArm());
+
+    dynamicPlaystation.A.whenPressed(() -> Arm.startingPosition());
+    dynamicPlaystation.A.whileHeld(() -> Arm.moveToPreset());
+    dynamicPlaystation.A.whenReleased(() -> Arm.stopArm());
+
+    dynamicPlaystation.LeftBumper.whenPressed(() -> Claw.open());
+    dynamicPlaystation.LeftBumper.whenReleased(() -> Claw.stop());
+
+    dynamicPlaystation.LeftBumper.whenPressed(() -> Claw.close());
+    dynamicPlaystation.LeftBumper.whenReleased(() -> Claw.stop());
+
+    dynamicPlaystation.LeftTrigger.whenPressed(() -> GoTele.enableArmManual());
+    dynamicPlaystation.LeftTrigger.whenReleased(() -> GoTele.disableArmManual());
+
+    dynamicPlaystation.RightTrigger.whenPressed(() -> safteyEnabled = false);
+    dynamicPlaystation.RightTrigger.whenPressed(() -> System.out.println("SAFTEY LIMITS DISABLED"));
+    dynamicPlaystation.RightTrigger.whenReleased(() -> safteyEnabled = true);
+    dynamicPlaystation.RightTrigger.whenReleased(() -> System.out.println("SAFTEY LIMITS ENABLED"));
+
+    dynamicPlaystation.Touchpad.whenPressed(() -> Arm.info.resetEncoders());
+    dynamicPlaystation.Options.whenPressed(() -> Arm.stopArm());
+    dynamicPlaystation.Options.whileHeld(() -> Arm.holdLifter());
+    dynamicPlaystation.Share.whenPressed(() -> Arm.setLifter(0));
 
     // 4/5 = grab and release | trigger = scoring position | 2 = bottom | 3 = driving | 7/8/10/44 = manual control
     
@@ -772,7 +817,7 @@ public class RobotContainer {
     System.out.print(" * ");
     dynamicJoystick.updateController();
     System.out.print(" * ");
-    PortBoundControllers.updateAllControllers();
+    //PortBoundControllers.updateAllControllers();
     System.out.println(" * Done***");
   }
 }

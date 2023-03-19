@@ -1,0 +1,21 @@
+[
+  {
+    "type": "java",
+    "name": "jar (in project CHARGED-UP-2023)",
+    "extensions": [
+      {
+        "name": "Sim GUI",
+        "libName": "/Users/duelmood/Repos/CHARGED-UP-2023/build/jni/release/libhalsim_gui.dylib",
+        "defaultEnabled": true
+      },
+      {
+        "name": "Use Real DriverStation",
+        "libName": "/Users/duelmood/Repos/CHARGED-UP-2023/build/jni/release/libhalsim_ds_socket.dylib",
+        "defaultEnabled": false
+      }
+    ],
+    "environment": {},
+    "libraryDir": "/Users/duelmood/Repos/CHARGED-UP-2023/build/jni/release",
+    "mainClassName": "frc.robot.Main"
+  }
+]

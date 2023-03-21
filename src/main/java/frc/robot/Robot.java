@@ -23,8 +23,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  public static int CamWidth = 640;
-  public static int CamHeight = 480;
+  public static int CamWidth = 320;
+  public static int CamHeight = 240;
   private ColorSensorV3 colorSensor;
   int counter1;
   boolean isBraked = true;
@@ -108,6 +108,10 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     System.out.println("Autonomous enabled");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    if (m_robotContainer.getResetEncoders()) {
+      Arm.info.resetEncoders();
+    }
 
     // Schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

@@ -38,10 +38,10 @@ public class AutoBalance extends CommandBase {
   public void execute() {
     // Move Forward until gyro gets past a threshold
     if (counter1 % 5 == 0) { // to slow it down
-      DriverStation.reportError("Gyro at " + DriveTrain.m_Gyro.getPitch(), false);
+      DriverStation.reportError("Gyro at " + DriveTrain.m_Gyro.getRoll(), false);
       if (balancingStage == 0) {
         DriverStation.reportWarning("Started balance " + balancingStage, false);
-        if (DriveTrain.m_Gyro.getPitch() < 2) {
+        if (DriveTrain.m_Gyro.getRoll() < 2) {
           DriveTrain.doTankDrive(speed, speed);
         } else {
           balancingStage = 1;
@@ -53,7 +53,7 @@ public class AutoBalance extends CommandBase {
         DriveTrain.motorDriveRight1.setIdleMode(IdleMode.kBrake);
         DriveTrain.motorDriveRight2.setIdleMode(IdleMode.kBrake);
         DriverStation.reportWarning("Next stage balance " + balancingStage, false);
-        if (Math.abs(DriveTrain.m_Gyro.getPitch()) > 1) {
+        if (Math.abs(DriveTrain.m_Gyro.getRoll()) > 1) {
           DriveTrain.doTankDrive(-speed / 2, -speed / 2);
         } else {
           balancingStage = 2;
@@ -62,8 +62,8 @@ public class AutoBalance extends CommandBase {
         timeBalanced = 0;
 
         while (timeBalanced < timeRequired) {
-          while (Math.abs(DriveTrain.m_Gyro.getPitch()) > 3) {
-            if (DriveTrain.m_Gyro.getPitch() < 0) { // is even
+          while (Math.abs(DriveTrain.m_Gyro.getRoll()) > 3) {
+            if (DriveTrain.m_Gyro.getRoll() < 0) { // is even
               DriveTrain.doTankDrive(speed / 2, speed / 2);
             } else {
               DriveTrain.doTankDrive(-speed / 2, -speed / 2);

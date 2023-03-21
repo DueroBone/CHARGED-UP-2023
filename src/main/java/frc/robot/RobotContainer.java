@@ -20,12 +20,14 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.autonomous.AutoStartPos1;
 import frc.robot.autonomous.AutoStartPos2;
+import frc.robot.commands.AutoBalance;
 import frc.robot.commands.GoTele;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.ControllerTracking;
 import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
@@ -48,7 +50,7 @@ public class RobotContainer {
 
   // ** set up autonomous chooser
   SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-  SendableChooser<Boolean> testChooser = new SendableChooser<Boolean>();
+  static SendableChooser<Boolean> resetOnStartChooser = new SendableChooser<Boolean>();
 
   public static class PortBoundControllers {
     public static class PortZero {
@@ -676,20 +678,22 @@ public class RobotContainer {
   }
 
   public RobotContainer() {
-    testChooser.setDefaultOption("Enabled", true);
-    testChooser.addOption("Disabled", false);
-    SmartDashboard.putData("Driving Enabled", testChooser);
 
     m_driveTrain.setDefaultCommand(new GoTele(true, true, 0.1, 1, 0.1));
     autoStartPos1Command = new AutoStartPos1(m_driveTrain);
     autoStartPos2Command = new AutoStartPos2(m_driveTrain);
     // autoStartPos3Command = new AutoStartPos3(m_driveTrain, m_shooter, m_intake, m_delivery);
     // autoStartPos4Command = new AutoStartPos4(m_driveTrain, m_shooter, m_intake, m_delivery);
-    autoChooser.setDefaultOption("Postion 1 (Balance)", autoStartPos1Command );
-    autoChooser.addOption("Postion 2 (Gamepiece Dropoff)", autoStartPos2Command );
+    autoChooser.setDefaultOption("Postion 1 (Balance)", autoStartPos1Command);
+    autoChooser.addOption("Postion 2 (Gamepiece Dropoff)", autoStartPos2Command);
+    autoChooser.addOption("Null", null);
     // autoChooser.addOption("Auto Start Postion 3", autoStartPos3Command );
     // autoChooser.addOption("Auto Start Postion 4", autoStartPos4Command );
     SmartDashboard.putData("Auto Choices", autoChooser);
+
+    resetOnStartChooser.setDefaultOption("True", true);
+    resetOnStartChooser.addOption("False", false);
+    SmartDashboard.putData("Reset encoders on start", resetOnStartChooser);
     
 
     if (DriverStation.getAlliance() == Alliance.Blue) {
@@ -715,18 +719,27 @@ public class RobotContainer {
     dynamicXbox.RightTrigger.whenPressed(() -> VisionLight.toggle());
     dynamicPlaystation.RightTrigger.whenPressed(() -> VisionLight.toggle());
     */
+
+    /*
     dynamicXbox.X.whileHeld(() -> Arm.moveExtender(true));
     dynamicXbox.Y.whileHeld(() -> Arm.stopExtender());
     dynamicXbox.B.whileHeld(() -> Arm.moveExtender(false));
-    //dynamicXbox.A.whileHeld(() -> Arm.stopArm());
+    dynamicXbox.A.whileHeld(() -> Arm.stopArm());
     dynamicXbox.A.whileHeld(() -> Arm.setLifter(0.05));
     dynamicXbox.RightStickPress.whenPressed(() -> Arm.info.resetEncoders());
     dynamicXbox.RightTrigger.whenPressed(() -> Arm.setLifter(1));
-
     dynamicXbox.LeftBumper.whenPressed(() -> Arm.moveLifter(false));
     dynamicXbox.LeftStickPress.whenPressed(() -> Arm.stopLifter());
     dynamicXbox.LeftStickPress.whileHeld(() -> Arm.holdLifter());
     dynamicXbox.RightBumper.whenPressed(() -> Arm.moveLifter(true));
+    */
+
+    dynamicXbox.Y.whileHeld(() -> System.out.println(Arm.info.getLifterPosition()));
+
+    dynamicXbox.LeftStickPress.whenPressed(() -> DriveTrain.doHighGear(true));
+    dynamicXbox.RightStickPress.whenPressed(() -> DriveTrain.doHighGear(false));
+
+    dynamicXbox.Options.whenPressed(() -> CommandScheduler.getInstance().schedule(new AutoBalance()));
 
     // Playstation
 
@@ -749,8 +762,8 @@ public class RobotContainer {
     dynamicPlaystation.LeftBumper.whenPressed(() -> Claw.open());
     dynamicPlaystation.LeftBumper.whenReleased(() -> Claw.stop());
 
-    dynamicPlaystation.LeftBumper.whenPressed(() -> Claw.close());
-    dynamicPlaystation.LeftBumper.whenReleased(() -> Claw.stop());
+    dynamicPlaystation.RightBumper.whenPressed(() -> Claw.close());
+    dynamicPlaystation.RightBumper.whenReleased(() -> Claw.stop());
 
     dynamicPlaystation.LeftTrigger.whenPressed(() -> GoTele.enableArmManual());
     dynamicPlaystation.LeftTrigger.whenReleased(() -> GoTele.disableArmManual());
@@ -808,6 +821,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     System.out.println("***getting Autonomous command");
     return autoChooser.getSelected();
+  }
+
+  public boolean getResetEncoders() {
+    return resetOnStartChooser.getSelected();
   }
 
   public static void RemapControllers() {

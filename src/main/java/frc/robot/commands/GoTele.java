@@ -170,7 +170,6 @@ public class GoTele extends CommandBase {
         } else {
           Arm.stopLifter();
           isHoldingArm  = true;
-          System.out.println("getName()");
         }
       }
       if (armExtend != 0) {

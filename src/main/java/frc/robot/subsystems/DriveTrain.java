@@ -35,6 +35,8 @@ public class DriveTrain extends SubsystemBase {
   private static final MotorControllerGroup driveGroupRight = new MotorControllerGroup(motorDriveRight1, motorDriveRight2, motorDriveRight3);
   private static final DifferentialDrive differentialDrive = new DifferentialDrive(driveGroupLeft, driveGroupRight);
 
+  
+
   private static RelativeEncoder m_leftEncoder;
   private static RelativeEncoder m_rightEncoder;
   
@@ -45,8 +47,7 @@ public class DriveTrain extends SubsystemBase {
   private static final boolean kSkipGyro = false;
   private static int counter = 0; // for limiting display
   
-  @SuppressWarnings({"CANMessageNotFound", "PneumaticHubGetSolenoids"})
-  static DoubleSolenoid gearChanger;
+  private static DoubleSolenoid gearChanger;
 
   /*
    * Creates a new DriveTrain.
@@ -68,12 +69,18 @@ public class DriveTrain extends SubsystemBase {
     motorDriveRight2.setSmartCurrentLimit(DriveConstants.driveAmpsMax);
     motorDriveRight3.setSmartCurrentLimit(DriveConstants.driveAmpsMax);
 
-    motorDriveLeft1.setClosedLoopRampRate(5);
-    motorDriveLeft2.setClosedLoopRampRate(5);
-    motorDriveLeft3.setClosedLoopRampRate(5);
-    motorDriveRight1.setClosedLoopRampRate(5);
-    motorDriveRight2.setClosedLoopRampRate(5);
-    motorDriveRight3.setClosedLoopRampRate(5);
+    motorDriveLeft1.setClosedLoopRampRate(0.25);
+    motorDriveLeft1.setOpenLoopRampRate(0.25);
+    motorDriveLeft2.setClosedLoopRampRate(0.25);
+    motorDriveLeft2.setOpenLoopRampRate(0.25);
+    motorDriveLeft3.setClosedLoopRampRate(0.25);
+    motorDriveLeft3.setOpenLoopRampRate(0.25);
+    motorDriveRight1.setClosedLoopRampRate(0.25);
+    motorDriveRight1.setOpenLoopRampRate(0.25);
+    motorDriveRight2.setClosedLoopRampRate(0.25);
+    motorDriveRight2.setOpenLoopRampRate(0.25);
+    motorDriveRight3.setClosedLoopRampRate(0.25);
+    motorDriveRight3.setOpenLoopRampRate(0.25);
 
 
     // Invert 1 side of robot so will drive forward
@@ -88,11 +95,19 @@ public class DriveTrain extends SubsystemBase {
     motorDriveRight2.setIdleMode(IdleMode.kCoast);
     motorDriveRight3.setIdleMode(IdleMode.kCoast);
 
+    motorDriveLeft1.enableVoltageCompensation(11);
+    motorDriveLeft2.enableVoltageCompensation(11);
+    motorDriveLeft3.enableVoltageCompensation(11);
+    motorDriveRight1.enableVoltageCompensation(11);
+    motorDriveRight2.enableVoltageCompensation(11);
+    motorDriveRight3.enableVoltageCompensation(11);
+
     m_leftEncoder =  motorDriveLeft1.getEncoder();
     m_rightEncoder = motorDriveRight1.getEncoder();
 
     // Initialize the solenoids
-    gearChanger = new DoubleSolenoid(PneumaticsModuleType.REVPH, DriveConstants.GearChangeUp, DriveConstants.GearChangeDown);
+    gearChanger = new DoubleSolenoid(5, PneumaticsModuleType.REVPH, DriveConstants.GearChangeUp, DriveConstants.GearChangeDown);
+    gearChanger.set(DoubleSolenoid.Value.kOff);
 
     if (kSkipGyro) {
       m_Gyro = null;
@@ -136,6 +151,12 @@ public class DriveTrain extends SubsystemBase {
    */
   public static void doTankDrive(double leftDrivePercent, double rightDrivePercent) {
 
+    if (motorDriveLeft1.getBusVoltage() > motorDriveRight1.getBusVoltage()) {
+      rightDrivePercent = rightDrivePercent * (1 - ((motorDriveRight1.getBusVoltage() - motorDriveLeft1.getBusVoltage()) / motorDriveLeft1.getBusVoltage()));
+    } else {
+      leftDrivePercent = leftDrivePercent * (1 - ((motorDriveLeft1.getBusVoltage() - motorDriveRight1.getBusVoltage()) / motorDriveRight1.getBusVoltage()));
+    }
+
     if (counter++ % 100 == 0) {
       System.out.println("**driveTrain power L/R: " + leftDrivePercent + " | " + rightDrivePercent);
     }
@@ -149,6 +170,12 @@ public class DriveTrain extends SubsystemBase {
     } else {
       driveGroupRight.stopMotor();
     }
+    // SmartDashboard.putNumber("Left 1", motorDriveLeft1.getBusVoltage());
+    // SmartDashboard.putNumber("Left 2", motorDriveLeft2.getBusVoltage());
+    // SmartDashboard.putNumber("Left 3", motorDriveLeft3.getBusVoltage());
+    // SmartDashboard.putNumber("Right 1", motorDriveRight1.getBusVoltage());
+    // SmartDashboard.putNumber("Right 2", motorDriveRight2.getBusVoltage());
+    // SmartDashboard.putNumber("Right 3", motorDriveRight3.getBusVoltage());
   }
 
   public void doTankDriveDefault(double leftDrivePercent, double rightDrivePercent) {
@@ -230,13 +257,13 @@ public class DriveTrain extends SubsystemBase {
   }
 
   // Function to set the solenoids
-  public void doHighGear(boolean fast) {
+  public static void doHighGear(boolean fast) {
     if (fast) {
       gearChanger.set(DoubleSolenoid.Value.kForward);
-      System.out.println("Gear shifter set to Low Torque Mode");
+      System.out.println("Gear shifter set to High Torque Mode");
     } else {
       gearChanger.set(DoubleSolenoid.Value.kReverse);
-      System.out.println("Gear shifter set to High Torque Mode");
+      System.out.println("Gear shifter set to High Speed Mode");
     }
   }
 

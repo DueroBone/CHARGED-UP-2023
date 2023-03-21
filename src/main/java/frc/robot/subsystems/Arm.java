@@ -47,7 +47,7 @@ public class Arm {
     lifterEncoder = lifterMotor.getEncoder();
     extenderEncoder = extenderMotor.getEncoder();
 
-    lifterEncoder.setPositionConversionFactor(0.6262); // degrees
+    lifterEncoder.setPositionConversionFactor(0.3925); // degrees // 0.6262 157.93 == 62
     extenderEncoder.setPositionConversionFactor(0.4323); // inches | not correct
 
     lifterLimitUp = lifterMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
@@ -86,6 +86,7 @@ public class Arm {
     if (actualHeight == desiredHeight) {
       holdLifter = info.getLifterPosition();
     }
+
     if (actualHeight < desiredHeight) {
       if (Math.abs(actualHeight - desiredHeight) > toleranceHeight) {
         moveLifter(true);
@@ -104,13 +105,13 @@ public class Arm {
 
     if (actualLength < desiredLength) {
       if (Math.abs(actualLength - desiredLength) > toleranceLength) {
-        moveExtender(true);
+        moveExtender(true, (actualLength - desiredLength));
       } else {
         stopExtender();
       }
     } else if (actualLength > desiredLength) {
       if (Math.abs(actualLength - desiredLength) > toleranceLength) {
-        moveExtender(false);
+        moveExtender(false, (actualLength - desiredLength));
       } else {
         stopExtender();
       }
@@ -131,13 +132,35 @@ public class Arm {
 
   public static void moveExtender(boolean out) {
     if (RobotContainer.safteyEnabled) {
-      if (lifterEncoder.getPosition() < -50) {
+      if (lifterEncoder.getPosition() < -80) {
         DriverStation.reportWarning("ARM TOO LOW TO EXTEND!!", false);
       } else {
         if (out) {
           setExtender(armOutSpeed);
         } else {
           setExtender(armInSpeed);
+        }
+      }
+    }
+  }
+
+  public static void moveExtender(boolean out, double distance) {
+    if (RobotContainer.safteyEnabled) {
+      if (lifterEncoder.getPosition() < -80) {
+        DriverStation.reportWarning("ARM TOO LOW TO EXTEND!!", false);
+      } else {
+        if (out) {
+          if (Math.abs(distance) < 5) {
+            setExtender(armOutSpeed /3);
+          } else {
+            setExtender(armOutSpeed);
+          }
+        } else {
+          if (Math.abs(distance) < 5) {
+            setExtender(armInSpeed / 3);
+          } else {
+            setExtender(armInSpeed);
+          }
         }
       }
     }
@@ -160,8 +183,8 @@ public class Arm {
   }
 
   public static void holdLifter() {
-    System.out.println(info.getLifterPosition() + " " + holdLifter);
-    //setLifter(pid.calculate(info.getLifterPosition(), holdLifter));
+    // System.out.println(info.getLifterPosition() + " " + holdLifter);
+    // setLifter(pid.calculate(info.getLifterPosition(), holdLifter));
     setLifter(0.05);
   }
 
@@ -261,12 +284,12 @@ class positions {
   public static final double startingHeight = 0;
   public static final double startingLength = 0;
 
-  public static final double drivingHeight = -15;
-  public static final double drivingLength = 0;
+  public static final double drivingHeight = -35;
+  public static final double drivingLength = 50;
 
-  public static final double bottomHeight = -50;
-  public static final double bottomLength = 0;
+  public static final double bottomHeight = -100;
+  public static final double bottomLength = 5;
 
-  public static final double scoringHeight = -25;
+  public static final double scoringHeight = -50;
   public static final double scoringLength = 225;
 }

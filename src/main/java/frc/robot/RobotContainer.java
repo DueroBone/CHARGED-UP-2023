@@ -6,7 +6,6 @@ package frc.robot;
 
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -741,11 +740,14 @@ public class RobotContainer {
 
     dynamicXbox.Options.whenPressed(() -> CommandScheduler.getInstance().schedule(new AutoBalance()));
 
+    dynamicXbox.Share.whileHeld(() -> Arm.stopArm());
+    dynamicXbox.Share.whileHeld(() -> DriveTrain.stop());
+
     // Playstation
 
-    dynamicPlaystation.Y.whenPressed(() -> Arm.drivingPosition());
-    dynamicPlaystation.Y.whileHeld(() -> Arm.moveToPreset());
-    dynamicPlaystation.Y.whenReleased(() -> Arm.stopArm());
+    dynamicPlaystation.A.whenPressed(() -> Arm.drivingPosition());
+    dynamicPlaystation.A.whileHeld(() -> Arm.moveToPreset());
+    dynamicPlaystation.A.whenReleased(() -> Arm.stopArm());
 
     dynamicPlaystation.X.whenPressed(() -> Arm.bottomPosition());
     dynamicPlaystation.X.whileHeld(() -> Arm.moveToPreset());
@@ -755,14 +757,14 @@ public class RobotContainer {
     dynamicPlaystation.B.whileHeld(() -> Arm.moveToPreset());
     dynamicPlaystation.B.whenReleased(() -> Arm.stopArm());
 
-    dynamicPlaystation.A.whenPressed(() -> Arm.startingPosition());
-    dynamicPlaystation.A.whileHeld(() -> Arm.moveToPreset());
-    dynamicPlaystation.A.whenReleased(() -> Arm.stopArm());
+    dynamicPlaystation.Y.whenPressed(() -> Arm.startingPosition());
+    dynamicPlaystation.Y.whileHeld(() -> Arm.moveToPreset());
+    dynamicPlaystation.Y.whenReleased(() -> Arm.stopArm());
 
-    dynamicPlaystation.LeftBumper.whenPressed(() -> Claw.open());
+    dynamicPlaystation.LeftBumper.whileHeld(() -> Claw.open());
     dynamicPlaystation.LeftBumper.whenReleased(() -> Claw.stop());
 
-    dynamicPlaystation.RightBumper.whenPressed(() -> Claw.close());
+    dynamicPlaystation.RightBumper.whileHeld(() -> Claw.close());
     dynamicPlaystation.RightBumper.whenReleased(() -> Claw.stop());
 
     dynamicPlaystation.LeftTrigger.whenPressed(() -> GoTele.enableArmManual());

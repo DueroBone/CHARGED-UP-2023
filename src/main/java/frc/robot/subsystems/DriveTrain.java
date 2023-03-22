@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.DriveConstants;
@@ -69,18 +68,18 @@ public class DriveTrain extends SubsystemBase {
     motorDriveRight2.setSmartCurrentLimit(DriveConstants.driveAmpsMax);
     motorDriveRight3.setSmartCurrentLimit(DriveConstants.driveAmpsMax);
 
-    motorDriveLeft1.setClosedLoopRampRate(0.25);
-    motorDriveLeft1.setOpenLoopRampRate(0.25);
-    motorDriveLeft2.setClosedLoopRampRate(0.25);
-    motorDriveLeft2.setOpenLoopRampRate(0.25);
-    motorDriveLeft3.setClosedLoopRampRate(0.25);
-    motorDriveLeft3.setOpenLoopRampRate(0.25);
-    motorDriveRight1.setClosedLoopRampRate(0.25);
-    motorDriveRight1.setOpenLoopRampRate(0.25);
-    motorDriveRight2.setClosedLoopRampRate(0.25);
-    motorDriveRight2.setOpenLoopRampRate(0.25);
-    motorDriveRight3.setClosedLoopRampRate(0.25);
-    motorDriveRight3.setOpenLoopRampRate(0.25);
+    motorDriveLeft1.setClosedLoopRampRate(0.5);
+    motorDriveLeft1.setOpenLoopRampRate(0.5);
+    motorDriveLeft2.setClosedLoopRampRate(0.5);
+    motorDriveLeft2.setOpenLoopRampRate(0.5);
+    motorDriveLeft3.setClosedLoopRampRate(0.5);
+    motorDriveLeft3.setOpenLoopRampRate(0.5);
+    motorDriveRight1.setClosedLoopRampRate(0.5);
+    motorDriveRight1.setOpenLoopRampRate(0.5);
+    motorDriveRight2.setClosedLoopRampRate(0.5);
+    motorDriveRight2.setOpenLoopRampRate(0.5);
+    motorDriveRight3.setClosedLoopRampRate(0.5);
+    motorDriveRight3.setOpenLoopRampRate(0.5);
 
 
     // Invert 1 side of robot so will drive forward
@@ -259,11 +258,11 @@ public class DriveTrain extends SubsystemBase {
   // Function to set the solenoids
   public static void doHighGear(boolean fast) {
     if (fast) {
-      gearChanger.set(DoubleSolenoid.Value.kForward);
-      System.out.println("Gear shifter set to High Torque Mode");
-    } else {
       gearChanger.set(DoubleSolenoid.Value.kReverse);
       System.out.println("Gear shifter set to High Speed Mode");
+    } else {
+      gearChanger.set(DoubleSolenoid.Value.kForward);
+      System.out.println("Gear shifter set to High Torque Mode");
     }
   }
 

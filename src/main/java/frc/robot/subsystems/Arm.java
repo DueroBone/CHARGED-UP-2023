@@ -148,10 +148,13 @@ public class Arm {
     if (RobotContainer.safteyEnabled) {
       if (lifterEncoder.getPosition() < -80) {
         DriverStation.reportWarning("ARM TOO LOW TO EXTEND!!", false);
+      }
+      if (lifterEncoder.getPosition() > -20) {
+        DriverStation.reportWarning("ARM TOO HIGH TO EXTEND!!", false);
       } else {
         if (out) {
           if (Math.abs(distance) < 5) {
-            setExtender(armOutSpeed /3);
+            setExtender(armOutSpeed / 3);
           } else {
             setExtender(armOutSpeed);
           }
@@ -185,7 +188,7 @@ public class Arm {
   public static void holdLifter() {
     // System.out.println(info.getLifterPosition() + " " + holdLifter);
     // setLifter(pid.calculate(info.getLifterPosition(), holdLifter));
-    setLifter(0.05);
+    setLifter(0.02);
   }
 
   public static void stopExtender() {
@@ -284,12 +287,12 @@ class positions {
   public static final double startingHeight = 0;
   public static final double startingLength = 0;
 
-  public static final double drivingHeight = -35;
+  public static final double drivingHeight = -15;
   public static final double drivingLength = 50;
 
   public static final double bottomHeight = -100;
-  public static final double bottomLength = 5;
+  public static final double bottomLength = 10;
 
-  public static final double scoringHeight = -50;
+  public static final double scoringHeight = -55;
   public static final double scoringLength = 225;
 }

@@ -81,8 +81,8 @@ public class GoTele extends CommandBase {
 
     if (dynamicPlaystation.object.isConnected()) {
       if (armManual) {
-        armLift = dynamicPlaystation.object.getRightY() * -1;
-        armExtend = dynamicPlaystation.object.getLeftY() * -1;
+        armLift = dynamicPlaystation.object.getLeftY() * -1;
+        armExtend = dynamicPlaystation.object.getRightY() * -1;
       } else {
         armLift = 0;
         armExtend = 0;

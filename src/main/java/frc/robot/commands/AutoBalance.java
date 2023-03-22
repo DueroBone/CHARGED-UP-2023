@@ -41,10 +41,11 @@ public class AutoBalance extends CommandBase {
       DriverStation.reportError("Gyro at " + DriveTrain.m_Gyro.getRoll(), false);
       if (balancingStage == 0) {
         DriverStation.reportWarning("Started balance " + balancingStage, false);
-        if (DriveTrain.m_Gyro.getRoll() < 2) {
+        if (Math.abs(DriveTrain.m_Gyro.getRoll() - 90) > 3) {
           DriveTrain.doTankDrive(speed, speed);
         } else {
           balancingStage = 1;
+          DriverStation.reportError("Moving to second stage", false);
         }
 
       } else if (balancingStage == 1) {
@@ -53,24 +54,27 @@ public class AutoBalance extends CommandBase {
         DriveTrain.motorDriveRight1.setIdleMode(IdleMode.kBrake);
         DriveTrain.motorDriveRight2.setIdleMode(IdleMode.kBrake);
         DriverStation.reportWarning("Next stage balance " + balancingStage, false);
-        if (Math.abs(DriveTrain.m_Gyro.getRoll()) > 1) {
+        if (Math.abs(DriveTrain.m_Gyro.getRoll() - 90) > 3) {
           DriveTrain.doTankDrive(-speed / 2, -speed / 2);
         } else {
           balancingStage = 2;
+          DriverStation.reportError("Moving to third stage", false);
         }
       } else if (balancingStage == 2) {
         timeBalanced = 0;
-
+        
         while (timeBalanced < timeRequired) {
-          while (Math.abs(DriveTrain.m_Gyro.getRoll()) > 3) {
-            if (DriveTrain.m_Gyro.getRoll() < 0) { // is even
+          while (Math.abs(DriveTrain.m_Gyro.getRoll() - 90) > 3) {
+            if (DriveTrain.m_Gyro.getRoll() < 90) { // is even
               DriveTrain.doTankDrive(speed / 2, speed / 2);
             } else {
               DriveTrain.doTankDrive(-speed / 2, -speed / 2);
             }
           }
           timeBalanced++;
-          while (System.currentTimeMillis() % 10 == 0) {}
+          DriverStation.reportError("Moving to another stage", false);
+          while (System.currentTimeMillis() % 10 == 0) {
+          }
         }
         DriverStation.reportWarning("Finished balance " + balancingStage, false);
       }

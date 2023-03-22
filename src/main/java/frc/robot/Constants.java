@@ -31,7 +31,7 @@ public final class Constants {
             public static final int GearChangeUp = 0;
             public static final int GearChangeDown = 1;
 
-            public static final int driveAmpsMax = 20;
+            public static final int driveAmpsMax = 15;
             public static final int drivingExponent = 1;
       }
       

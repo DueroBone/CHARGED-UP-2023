@@ -145,26 +145,17 @@ public class Arm {
   }
 
   public static void moveExtender(boolean out, double distance) {
-    if (RobotContainer.safteyEnabled) {
-      if (lifterEncoder.getPosition() < -80) {
-        DriverStation.reportWarning("ARM TOO LOW TO EXTEND!!", false);
-      }
-      if (lifterEncoder.getPosition() > -20) {
-        DriverStation.reportWarning("ARM TOO HIGH TO EXTEND!!", false);
+    if (out) {
+      if (Math.abs(distance) < 5) {
+        setExtender(armOutSpeed / 3);
       } else {
-        if (out) {
-          if (Math.abs(distance) < 5) {
-            setExtender(armOutSpeed / 3);
-          } else {
-            setExtender(armOutSpeed);
-          }
-        } else {
-          if (Math.abs(distance) < 5) {
-            setExtender(armInSpeed / 3);
-          } else {
-            setExtender(armInSpeed);
-          }
-        }
+        setExtender(armOutSpeed);
+      }
+    } else {
+      if (Math.abs(distance) < 5) {
+        setExtender(armInSpeed / 3);
+      } else {
+        setExtender(armInSpeed);
       }
     }
   }
@@ -175,7 +166,21 @@ public class Arm {
   }
 
   public static void setExtender(double speed) {
-    extenderMotor.set(speed);
+    if (RobotContainer.safteyEnabled) {
+      if (lifterEncoder.getPosition() < -80) {
+        DriverStation.reportWarning("ARM TOO LOW TO EXTEND!!", false);
+      } else if (lifterEncoder.getPosition() > -20) {
+        DriverStation.reportWarning("ARM TOO HIGH TO EXTEND!!", false);
+      } else if ((extenderEncoder.getPosition() > (positions.scoringLength + 5)) && (speed > 0)) {
+        DriverStation.reportWarning("EXTENDER TOO FAR OUT TO EXTEND!!", false);
+      } else if ((extenderEncoder.getPosition() < (0)) && (speed < -5)) {
+        DriverStation.reportWarning("EXTENDER TOO FAR IN TO CONTRACT!!", false);
+      } else {
+        extenderMotor.set(speed);
+      }
+    } else {
+      extenderMotor.set(speed);
+    }
   }
 
   public static void stopLifter() {

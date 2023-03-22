@@ -711,14 +711,6 @@ public class RobotContainer {
 
   public static void configureButtonBindings() {
     System.out.println("Assigning Buttons");
-    /* // reinstantiate this area
-    dynamicXbox.RightBumper.whenPressed(() -> CommandScheduler.getInstance().schedule(new AutoBalance(0.1)));
-
-    dynamicJoystick.Trigger.whenPressed(() -> VisionLight.toggle());
-    dynamicXbox.RightTrigger.whenPressed(() -> VisionLight.toggle());
-    dynamicPlaystation.RightTrigger.whenPressed(() -> VisionLight.toggle());
-    */
-
     /*
     dynamicXbox.X.whileHeld(() -> Arm.moveExtender(true));
     dynamicXbox.Y.whileHeld(() -> Arm.stopExtender());
@@ -742,6 +734,7 @@ public class RobotContainer {
 
     dynamicXbox.Share.whileHeld(() -> Arm.stopArm());
     dynamicXbox.Share.whileHeld(() -> DriveTrain.stop());
+    dynamicXbox.RightBumper.whenPressed(() -> System.out.print(Arm.info.getLifterPosition() + " | " + Arm.info.getExtenderPosition()));
 
     // Playstation
 
@@ -780,8 +773,8 @@ public class RobotContainer {
     dynamicPlaystation.Options.whileHeld(() -> Arm.holdLifter());
     dynamicPlaystation.Share.whenPressed(() -> Arm.setLifter(0));
 
+    /*
     // 4/5 = grab and release | trigger = scoring position | 2 = bottom | 3 = driving | 7/8/10/44 = manual control
-    
     dynamicJoystick.Four.whenPressed(() -> Claw.open());
     dynamicJoystick.Four.whenPressed(() -> System.out.println("Closing claw"));
     dynamicJoystick.Four.whenReleased(() -> Claw.stop());
@@ -817,6 +810,7 @@ public class RobotContainer {
     dynamicJoystick.Ten.whenReleased(() -> GoTele.disableArmManual());
     dynamicJoystick.Eleven.whenPressed(() -> GoTele.enableArmManual());
     dynamicJoystick.Eleven.whenReleased(() -> GoTele.disableArmManual());
+    */
     // arm movement is in GoTele
   }
 

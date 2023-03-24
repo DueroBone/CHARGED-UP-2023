@@ -21,7 +21,7 @@ public class AutoStartPos1 extends SequentialCommandGroup {
         new InstantCommand(() -> DriveTrain.stop(), m_driveTrain), // make sure stopped
         new AutoDriveStraightTime(-0.75, 5), // go straight off starting line
         new WaitCommand(0.25),
-        new AutoBalance(false),
+        new AutoBalance(true),
         new InstantCommand(() -> DriveTrain.stop(), m_driveTrain) // make sure stopped
     );
   }

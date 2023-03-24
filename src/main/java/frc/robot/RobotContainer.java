@@ -32,15 +32,8 @@ public class RobotContainer {
   public static final DriveTrain m_driveTrain = new DriveTrain();
   
   Compressor c = new Compressor(PneumaticsModuleType.REVPH);
-  /*private static Command autoDriveStraightGyroCommand;
-  private static Command autoDriveStraightCommand;
-  private static Command autoDriveUnitsCommand;
-  private static Command autoDriveSpinCommand;
-  private static Command autoDriveTurnCommand; */
   private static Command autoStartPos1Command;
   private static Command autoStartPos2Command;
-  // private static Command autoStartPos3Command;
-  // private static Command autoStartPos4Command;
   public static boolean inCompetition = false;
   public static boolean safteyEnabled = true;
   public static String allianceColor;
@@ -681,13 +674,9 @@ public class RobotContainer {
     m_driveTrain.setDefaultCommand(new GoTele(true, true, 0.1, 1, 0.1));
     autoStartPos1Command = new AutoStartPos1(m_driveTrain);
     autoStartPos2Command = new AutoStartPos2(m_driveTrain);
-    // autoStartPos3Command = new AutoStartPos3(m_driveTrain, m_shooter, m_intake, m_delivery);
-    // autoStartPos4Command = new AutoStartPos4(m_driveTrain, m_shooter, m_intake, m_delivery);
     autoChooser.setDefaultOption("Postion 1 (Balance)", autoStartPos1Command);
     autoChooser.addOption("Postion 2 (Gamepiece Dropoff)", autoStartPos2Command);
     autoChooser.addOption("Null", null);
-    // autoChooser.addOption("Auto Start Postion 3", autoStartPos3Command );
-    // autoChooser.addOption("Auto Start Postion 4", autoStartPos4Command );
     SmartDashboard.putData("Auto Choices", autoChooser);
 
     resetOnStartChooser.setDefaultOption("True", true);
@@ -778,44 +767,6 @@ public class RobotContainer {
     dynamicPlaystation.Options.whileHeld(() -> Arm.holdLifter());
     dynamicPlaystation.Share.whenPressed(() -> Arm.setLifter(0));
 
-    /*
-    // 4/5 = grab and release | trigger = scoring position | 2 = bottom | 3 = driving | 7/8/10/44 = manual control
-    dynamicJoystick.Four.whenPressed(() -> Claw.open());
-    dynamicJoystick.Four.whenPressed(() -> System.out.println("Closing claw"));
-    dynamicJoystick.Four.whenReleased(() -> Claw.stop());
-
-    dynamicJoystick.Five.whenPressed(() -> Claw.close());
-    dynamicJoystick.Five.whenPressed(() -> System.out.println("Opening claw"));
-    dynamicJoystick.Five.whenReleased(() -> Claw.stop());
-    
-    dynamicJoystick.Trigger.whenPressed(() -> Arm.scoringPosition());
-    dynamicJoystick.Trigger.whileHeld(() -> Arm.moveToPreset());
-    dynamicJoystick.Trigger.whenReleased(() -> Arm.stopArm());
-    
-    dynamicJoystick.Three.whenPressed(() -> Arm.drivingPosition()); 
-    dynamicJoystick.Three.whileHeld(() -> Arm.moveToPreset()); 
-    dynamicJoystick.Three.whenReleased(() -> Arm.stopArm());
-    
-    dynamicJoystick.Two.whenPressed(() -> Arm.bottomPosition());
-    dynamicJoystick.Two.whileHeld(() -> Arm.moveToPreset());
-    dynamicJoystick.Two.whenReleased(() -> Arm.stopArm());
-    
-    dynamicJoystick.Eight.whenPressed(() -> Arm.startingPosition());
-    dynamicJoystick.Eight.whileHeld(() -> Arm.moveToPreset());
-    dynamicJoystick.Eight.whenReleased(() -> Arm.stopArm());
-    dynamicJoystick.Nine.whenPressed(() -> Arm.startingPosition());
-    dynamicJoystick.Nine.whileHeld(() -> Arm.moveToPreset());
-    dynamicJoystick.Nine.whenReleased(() -> Arm.stopArm());
-    
-    dynamicJoystick.Six.whenPressed(() -> GoTele.enableArmManual());
-    dynamicJoystick.Six.whenReleased(() -> GoTele.disableArmManual());
-    dynamicJoystick.Seven.whenPressed(() -> GoTele.enableArmManual());
-    dynamicJoystick.Seven.whenReleased(() -> GoTele.disableArmManual());
-    dynamicJoystick.Ten.whenPressed(() -> GoTele.enableArmManual());
-    dynamicJoystick.Ten.whenReleased(() -> GoTele.disableArmManual());
-    dynamicJoystick.Eleven.whenPressed(() -> GoTele.enableArmManual());
-    dynamicJoystick.Eleven.whenReleased(() -> GoTele.disableArmManual());
-    */
     // arm movement is in GoTele
   }
 
@@ -836,7 +787,6 @@ public class RobotContainer {
     System.out.print(" * ");
     dynamicJoystick.updateController();
     System.out.print(" * ");
-    //PortBoundControllers.updateAllControllers();
     System.out.println(" * Done***");
   }
 }

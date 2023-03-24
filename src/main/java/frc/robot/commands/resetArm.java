@@ -23,11 +23,11 @@ public class resetArm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!Arm.info.getLifterLimitUp()) {
-      Arm.setLifter(Constants.DeviceConstants.armUpMax / 3);
+    if (Arm.info.getLifterVelocity() != 0) {
+      Arm.setLifter(Constants.DeviceConstants.armUpMax / 5);
     }
-    if (!Arm.info.getExtenderLimitIn()) {
-      Arm.setExtender(Constants.DeviceConstants.armInMax / 3);
+    if (Arm.info.getExtenderVelocity() != 0) {
+      Arm.setExtender(Constants.DeviceConstants.armInMax / 5);
     }
     if (counter++%5 == 0) {
       System.out.println("*Arm resetting*");

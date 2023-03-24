@@ -19,10 +19,13 @@ public class AutoBalance extends CommandBase {
   int timeBalanced;
   int timeRequired = 10000;
 
-  public AutoBalance() {
+  public AutoBalance(Boolean forward) {
     // Use addRequirements() here to declare subsystem dependencies.
     // m_driveTrain = new DriveTrain();
-    // addRequirements(m_driveTrain);
+    addRequirements(m_driveTrain);
+    if (!forward) {
+      speed = speed * -1;
+    }
   }
 
   // Called when the command is initially scheduled.
@@ -83,6 +86,7 @@ public class AutoBalance extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    DriveTrain.stop();
   }
 
   // Returns true when the command should end.

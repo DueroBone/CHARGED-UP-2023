@@ -26,7 +26,6 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.ControllerTracking;
 import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
@@ -46,6 +45,7 @@ public class RobotContainer {
   public static boolean safteyEnabled = true;
   public static String allianceColor;
   public static int startPosition;
+  static Command AutoBalanceCommand;
 
   // ** set up autonomous chooser
   SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -693,7 +693,8 @@ public class RobotContainer {
     resetOnStartChooser.setDefaultOption("True", true);
     resetOnStartChooser.addOption("False", false);
     SmartDashboard.putData("Reset encoders on start", resetOnStartChooser);
-    
+
+    AutoBalanceCommand = new AutoBalance(true);
 
     if (DriverStation.getAlliance() == Alliance.Blue) {
         allianceColor = "blue";
@@ -730,11 +731,14 @@ public class RobotContainer {
     dynamicXbox.LeftStickPress.whenPressed(() -> DriveTrain.doHighGear(true));
     dynamicXbox.RightStickPress.whenPressed(() -> DriveTrain.doHighGear(false));
 
-    dynamicXbox.Options.whenPressed(() -> CommandScheduler.getInstance().schedule(new AutoBalance()));
+    dynamicXbox.Options.whenPressed(() -> AutoBalanceCommand.schedule());
+    dynamicXbox.Share.whenPressed(() -> AutoBalanceCommand.cancel());
 
-    dynamicXbox.Share.whileHeld(() -> Arm.stopArm());
-    dynamicXbox.Share.whileHeld(() -> DriveTrain.stop());
-    dynamicXbox.RightBumper.whenPressed(() -> System.out.print(Arm.info.getLifterPosition() + " | " + Arm.info.getExtenderPosition()));
+    // dynamicXbox.Share.whileHeld(() -> Arm.stopArm());
+    // dynamicXbox.Share.whileHeld(() -> DriveTrain.stop());
+    // dynamicXbox.RightBumper.whenPressed(() -> System.out.print(Arm.info.getLifterPosition() + " | " + Arm.info.getExtenderPosition()));
+    
+    // Bumpers are slow speed
 
     // Playstation
 
@@ -769,6 +773,7 @@ public class RobotContainer {
     dynamicPlaystation.RightTrigger.whenReleased(() -> System.out.println("SAFTEY LIMITS ENABLED"));
 
     dynamicPlaystation.Touchpad.whenPressed(() -> Arm.info.resetEncoders());
+
     dynamicPlaystation.Options.whenPressed(() -> Arm.stopArm());
     dynamicPlaystation.Options.whileHeld(() -> Arm.holdLifter());
     dynamicPlaystation.Share.whenPressed(() -> Arm.setLifter(0));

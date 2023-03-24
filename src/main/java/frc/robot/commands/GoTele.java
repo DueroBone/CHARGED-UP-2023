@@ -157,9 +157,13 @@ public class GoTele extends CommandBase {
     }
 
     if (drivingEnabled) {
-      DriveTrain.doTankDrive(teleLeft, teleRight);
+      if (RobotContainer.dynamicXbox.RightBumper.get() || RobotContainer.dynamicXbox.LeftBumper.get()) {
+        DriveTrain.doTankDrive(teleLeft / 3, teleRight / 3);
+      } else {
+        DriveTrain.doTankDrive(teleLeft, teleRight);
+      }
     }
-    
+
     if (armEnabled && armManual) {
       if (armLift != 0) {
         Arm.setLifter(armLift);
@@ -169,7 +173,7 @@ public class GoTele extends CommandBase {
           Arm.holdLifter();
         } else {
           Arm.stopLifter();
-          isHoldingArm  = true;
+          isHoldingArm = true;
         }
       }
       if (armExtend != 0) {
@@ -197,7 +201,7 @@ public class GoTele extends CommandBase {
     armManual = true;
     System.out.println("Arm under manual control");
   }
-  
+
   public static void disableArmManual() {
     armManual = false;
     System.out.println("Arm NOT under manual control");

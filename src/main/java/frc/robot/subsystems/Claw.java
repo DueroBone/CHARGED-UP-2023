@@ -18,7 +18,7 @@ public class Claw {
   }
 
   public static void close() {
-    clawMotor.set(DeviceConstants.clawOpenMax);
+    clawMotor.set(DeviceConstants.clawCloseMax);
   }
 
   public static void stop() {

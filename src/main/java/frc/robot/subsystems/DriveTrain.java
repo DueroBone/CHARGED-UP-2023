@@ -131,7 +131,6 @@ public class DriveTrain extends SubsystemBase {
         } // sleep in milliseconds
         System.out.print("**gyro isCalibrating . . .");
       }
-      //SmartDashboard.putBoolean("gyro connected", m_Gyro.isConnected());
       System.out.print("gyro connected " + m_Gyro.isConnected());
     }
     System.out.println(" ... Done");
@@ -169,12 +168,6 @@ public class DriveTrain extends SubsystemBase {
     } else {
       driveGroupRight.stopMotor();
     }
-    // SmartDashboard.putNumber("Left 1", motorDriveLeft1.getBusVoltage());
-    // SmartDashboard.putNumber("Left 2", motorDriveLeft2.getBusVoltage());
-    // SmartDashboard.putNumber("Left 3", motorDriveLeft3.getBusVoltage());
-    // SmartDashboard.putNumber("Right 1", motorDriveRight1.getBusVoltage());
-    // SmartDashboard.putNumber("Right 2", motorDriveRight2.getBusVoltage());
-    // SmartDashboard.putNumber("Right 3", motorDriveRight3.getBusVoltage());
   }
 
   public void doTankDriveDefault(double leftDrivePercent, double rightDrivePercent) {

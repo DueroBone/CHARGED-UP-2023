@@ -48,7 +48,6 @@ public class Robot extends TimedRobot {
       visionCamera.setPixelFormat(PixelFormat.kYUYV);
       visionCamera.setFPS(30);
       visionCamera.setResolution(CamWidth, CamHeight);
-      System.out.println("Camera connected");
     } catch (VideoException e) {
       System.out.println("NO CAMERA DETECTED");
     }
@@ -89,6 +88,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Right Drive Speed", DriveTrain.getRightSpeed());
     SmartDashboard.putNumber("Arm Lifter Speed", Arm.info.getLifterSpeed());
     SmartDashboard.putNumber("Arm Extender Speed", Arm.info.getExtenderSpeed());
+
   }
 
   // This function is called once each time the robot is Disabled

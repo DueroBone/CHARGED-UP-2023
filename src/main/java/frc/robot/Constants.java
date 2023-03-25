@@ -48,13 +48,10 @@ public final class Constants {
             public static final int clawAmpsMax = 20;
             public static final int armAmpsMax = 20;
 
-            public static final double armUpMax = 0.75;
-            public static final double armDownMax = -0.5;
-            public static final double armInMax = -0.85;
+            public static final double armUpMax = 0.5;
+            public static final double armDownMax = -0.25;
+            public static final double armInMax = -0.75;
             public static final double armOutMax = 1;
-
-            public static final double clawOpenMax = 0.15;
-            public static final double clawCloseMax = -0.25;
       }
 
       public static final class WiringConstants {
@@ -65,8 +62,8 @@ public final class Constants {
             public static final int LeftDrive2 = 14;
             public static final int LeftDrive3 = 13;
             public static final int armExtender = 8;
-            public static final int armLifter = 0;
-            public static final int VisionLight = 0;
+            public static final int armLifter = 0; //
+            public static final int VisionLight = 0; //
       }
 
       public static final class OIConstants {
@@ -152,6 +149,8 @@ public final class Constants {
             public static final int kATK3Button13 = 13;
             public static final int kATK3Button14 = 14;
 
+            // RobotContainer.controller0.getType() Ps4 = kHIDGamepad Xbox = kXInputGamepad
+            // ATK3 = kHIDJoystick
             public static int SmartMap(GenericHID controller, String ButtonName) {
                   int ButtonID = 1;
                   HIDType hidType = null;
@@ -312,6 +311,7 @@ public final class Constants {
                                     break;
                               }
                   }
+                  // System.out.println("SmartMap " + ButtonName + " Port:" + ButtonID);
                   return ButtonID;
             }
       }

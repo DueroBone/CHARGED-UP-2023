@@ -47,7 +47,7 @@ public class Arm {
     lifterEncoder = lifterMotor.getEncoder();
     extenderEncoder = extenderMotor.getEncoder();
 
-    lifterEncoder.setPositionConversionFactor(0.3925); // degrees | not correct
+    lifterEncoder.setPositionConversionFactor(0.3925); // degrees // 0.6262 157.93 == 62
     extenderEncoder.setPositionConversionFactor(0.4323); // inches | not correct
 
     lifterLimitUp = lifterMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
@@ -57,10 +57,10 @@ public class Arm {
 
     pid = new PIDController(0.05, 0, 0.5);
     pid.setTolerance(toleranceHeight);
-    pid.enableContinuousInput(-100, 10);
+    pid.enableContinuousInput(-70, 70);
 
-    lifterMotor.burnFlash();
-    extenderMotor.burnFlash();
+    // lifterMotor.burnFlash();
+    // extenderMotor.burnFlash();
 
     System.out.println(" ... Done");
   }
@@ -118,6 +118,8 @@ public class Arm {
     } else {
       stopExtender();
     }
+    // System.out.println("Arm at height: " + actualHeight + " Going to: " +
+    // desiredHeight + " At speed: " + lifterMotor.get());
   }
 
   public static void moveLifter(boolean up) {
@@ -160,6 +162,7 @@ public class Arm {
 
   public static void setLifter(double speed) {
     lifterMotor.set(speed);
+    // System.out.println("Lifter at: " + lifterMotor.get());
   }
 
   public static void setExtender(double speed) {
@@ -194,6 +197,7 @@ public class Arm {
   }
 
   public static void stopExtender() {
+    // extenderMotor.set(0.02);
     extenderMotor.stopMotor();
   }
 

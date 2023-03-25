@@ -18,6 +18,8 @@ public class GoTele extends CommandBase {
     System.out.println(MessageFormat.format("**Started {0} ", this.getName()));
   }
 
+  // private double teleLeft = 0;
+  // private double teleRight = 0;
   private boolean drivingEnabled = true;
   private boolean armEnabled = true;
   private double deadzone = -1;
@@ -36,13 +38,14 @@ public class GoTele extends CommandBase {
    * Identifies active driving controller and activates drivetrain
    */
   public GoTele(boolean drivingEnabled, boolean armEnabled, double driveDeadzone, double topSpeed, double armDeadzone) {
-    this.drivetrain = RobotContainer.m_driveTrain;
+    this.drivetrain = RobotContainer.m_driveTrain; // get driveTrain object from RobotContainer
     this.drivingEnabled = drivingEnabled;
     this.deadzone = driveDeadzone;
     this.speedMultiplier = topSpeed;
     this.armDeadzone = armDeadzone;
     this.armEnabled = armEnabled;
     this.counter = 0;
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.drivetrain);
   }
 

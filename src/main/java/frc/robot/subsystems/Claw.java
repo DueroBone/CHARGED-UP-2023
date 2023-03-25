@@ -14,11 +14,11 @@ public class Claw {
   }
 
   public static void open() {
-    clawMotor.set(DeviceConstants.clawOpenMax);
+    clawMotor.set(0.15);
   }
 
   public static void close() {
-    clawMotor.set(DeviceConstants.clawCloseMax);
+    clawMotor.set(-0.25);
   }
 
   public static void stop() {

@@ -23,7 +23,7 @@ public class AutoBalance extends CommandBase {
   public AutoBalance(Boolean forward) {
     // Use addRequirements() here to declare subsystem dependencies.
     // m_driveTrain = new DriveTrain();
-    addRequirements(m_driveTrain);
+    // addRequirements(m_driveTrain);
     if (!forward) {
       speed = speed * -1;
     }

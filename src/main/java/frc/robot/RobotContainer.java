@@ -26,6 +26,7 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.ControllerTracking;
 import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
@@ -777,6 +778,8 @@ public class RobotContainer {
     dynamicPlaystation.Options.whenPressed(() -> Arm.stopArm());
     dynamicPlaystation.Options.whileHeld(() -> Arm.holdLifter());
     dynamicPlaystation.Share.whenPressed(() -> Arm.setLifter(0));
+    
+    // dynamicPlaystation.Share.onTrue(new InstantCommand(() -> Arm.setLifter(0)));
 
     /*
     // 4/5 = grab and release | trigger = scoring position | 2 = bottom | 3 = driving | 7/8/10/44 = manual control
